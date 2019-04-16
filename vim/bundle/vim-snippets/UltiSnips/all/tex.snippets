@@ -1,0 +1,324 @@
+# This file contains snippets for typesetting LaTeX
+#
+priority 10
+
+############
+# Text Replacement
+############
+
+snippet iff "if and only if"
+if and only if
+endsnippet
+
+#############
+#### Math
+#############
+
+snippet ,, "ldots" iA
+, \\ldots, $0
+endsnippet
+
+snippet ++ "ldots plus" iA
++ \\ldots + $0
+endsnippet
+
+snippet == "equals" iA
+&= $0
+endsnippet
+
+snippet ii "item" bA
+\\item $0
+endsnippet
+
+snippet [ "display math" bA
+\\begin{align*}
+	$1
+\\end{align*}
+$0
+endsnippet
+
+snippet : "set condition"
+\\ : \\ $0
+endsnippet
+
+snippet \{ "set" iA
+\\left\\{ $1 \\right\\}$0
+endsnippet
+
+snippet >> ">>" iA
+\gg
+endsnippet
+
+snippet << "<<" iA
+\ll
+endsnippet
+
+snippet "([a-zA-Z])bar" "Automatic overline bar" ri
+\bar{`!p snip.rv=match.group(1)`}
+endsnippet
+
+snippet '(\s|\$|^)bar' "overline bar environment" r
+`!p snip.rv = match.group(1)`\bar{$1}$0
+endsnippet
+
+snippet bf "bold" bA
+\\textbf{$1}$0
+endsnippet
+
+snippet bf "bold"
+\\textbf{$1}$0
+endsnippet
+
+snippet bmat "bmat" iA
+\begin{bmatrix} $1 \end{bmatrix} $0
+endsnippet
+
+snippet '(\s|\$|^\(|\))cal' "math cal" r
+`!p snip.rv = match.group(1)`\\mathcal{${1:C}}$0
+endsnippet
+
+snippet "cal([A-Z])" "math cal automatic" rA
+\\mathcal{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+snippet \cal "math cal" i
+\\mathcal{${1:C}}$0
+endsnippet
+
+snippet cd "cdots"
+\\cdots $0
+endsnippet
+
+snippet ceil "ceiling" i
+\left\lceil $1 \right\rceil $0
+endsnippet
+
+snippet dm "Display Math" bwA
+\\[
+	$1
+\\]
+$0
+endsnippet
+
+snippet exactseq "exact sequence" b
+\\begin{align*}
+    0 \to ${1:A} \xto{${2:f}} ${3:B} \xto{${4:g}} ${5:C} \to 0${6:,}
+\\end{align*}
+$0
+endsnippet
+
+snippet '(\s|\$|^)fk' "math frak" r
+`!p snip.rv = match.group(1)`\\mathfrak{${1:C}}$0
+endsnippet
+
+snippet \fk "math frak" i
+\\mathfrak{${1:C}}$0
+endsnippet
+
+snippet "fk([A-Z])" "math frak automatic" rA
+\\mathfrak{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+snippet floor "floor" i
+\left\lfloor $1 \right\rfloor$0
+endsnippet
+
+snippet fnote "footnote" i
+\\footnote{$1}$0
+endsnippet
+
+snippet '(\s|\$|^)frac' "fraction" r
+`!p snip.rv = match.group(1)`\\frac{$1}{$2}$0
+endsnippet
+
+snippet \frac "fraction"
+\\frac{$1}{$2}$0
+endsnippet
+
+snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)//' "Automatic fraction" wrA
+\\frac{`!p snip.rv = match.group(1)`}{$1}$0
+endsnippet
+
+snippet "([a-zA-Z])hat" "Hat over letter on trigger" ri
+\hat{`!p snip.rv=match.group(1)`}
+endsnippet
+
+snippet '(\s|\$|^)hat' "math hat environment" r
+`!p snip.rv = match.group(1)`\hat{$1}$0
+endsnippet
+
+snippet invs "inverse" iA
+^{-1}
+endsnippet
+
+snippet it "italic"
+\\textit{$1}$0
+endsnippet
+
+snippet <D-i> "italic" wA
+\\textit{$1}$0
+endsnippet
+
+
+snippet l( "left parentheses" i
+\\left( $1 \\right)$0
+endsnippet
+
+snippet l[ "left sq bracket"
+\\left[ $1 \\right]$0
+endsnippet
+
+snippet l| "left abs"
+\\left| $1 \\right|$0
+endsnippet
+
+snippet ld "ldots"
+\\ldots $0
+endsnippet
+
+snippet lim "limit" w
+\\lim_{${1:n} \\to ${2:\\infty}}
+endsnippet
+
+snippet liminf "liminf" w
+\\limsup_{${1:n} \\to ${2:\\infty}}
+endsnippet
+
+snippet limsup "limsup" w
+\\limsup_{${1:n} \\to ${2:\\infty}}
+endsnippet
+
+snippet '(\s|\$|^\(|\))lr' "lrangle" r
+`!p snip.rv = match.group(1)`\\left\\langle $1 \\right\\rangle$0
+endsnippet
+
+snippet \lr "lrangle"
+\\lrangle{ $1 }$0
+endsnippet
+
+context "endofline()"
+snippet nl "new line" A
+\\\\
+&${1:=} $0
+endsnippet
+
+snippet nsubgp "normal subgroup"
+\\trianglelefteq
+endsnippet
+
+snippet part "d/dx" w
+\\frac{\\partial ${1:f}}{\\partial ${2:x}} $0
+endsnippet
+
+snippet pmat "Parentheses matrix" iA
+\\begin{pmatrix} $1 \\end{pmatrix} $0
+endsnippet
+
+snippet prod "product" w
+\prod_{${1:n=${2:1}}}^{${3:\infty}} ${4:${VISUAL}} $0
+endsnippet
+
+snippet qq "quad quad"
+\\quad\\quad $0
+endsnippet
+
+snippet res "restriction"
+\\left. $1 \\right|_{$2} $0
+endsnippet
+
+snippet '(\s|\$|^\(|\))sb' "subset" r
+`!p snip.rv = match.group(1)`\\subseteq 
+endsnippet
+
+snippet \sb "\subset" i
+\\subseteq 
+endsnippet
+
+snippet '(\s|\$|^\(|\))sc' "math script" r
+`!p snip.rv = match.group(1)`\\mathscr{${1:C}}$0
+endsnippet
+
+snippet \sc "math script" i
+\\mathscr{${1:C}}$0
+endsnippet
+
+snippet "sc([A-Z])" "math script automatic" rA
+\\mathscr{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+snippet sec "section" b
+\\section{$1}
+
+$0
+endsnippet
+
+snippet stackrel "stackrel"
+\stackrel{${1:above}}{${2:below}} ${3}
+endsnippet
+
+snippet subsec "subsection" b
+\\subsection{$1}
+
+$0
+endsnippet
+
+snippet sp "supset"
+\\supseteq 
+endsnippet
+
+snippet \sp "\supset" i
+\\supseteq 
+endsnippet
+
+snippet sq "Square Root" i
+\sqrt{${1:${VISUAL}}} $0
+endsnippet
+
+snippet '(\s|\$|^\(|\))sum' "\Sum environment" r
+`!p snip.rv = match.group(1)`\\sum_{${1:n=1}}^{${2:\infty}} $0
+endsnippet
+
+snippet \sum "Sum environment"
+\\sum_{${1:n=1}}^{${2:\infty}} $0
+endsnippet
+
+snippet vmat "Vertical Matrix" iA
+\\begin{vmatrix} $1 \\end{vmatrix} $0
+endsnippet
+
+################
+### Tikz
+################
+
+snippet tikz2 "Tikz 2x2" b
+\\[
+	\\begin{tikzcd}
+	$1 & $2 \\\\
+	$3 & $4
+	\\end{tikzcd}
+\\]
+$0
+endsnippet
+
+snippet tikz3 "Tikz 3x3" b
+\\[
+	\\begin{tikzcd}
+	$1 & $2 & $3 \\\\
+	$4 & $5 & $6 \\\\
+	$7 & $8 & $9
+	\\end{tikzcd}
+\\]
+$0
+endsnippet
+
+snippet tpic "Tikz picture environment" b
+\\begin{figure}
+	\\begin{tikzpicture}[h]
+	$1
+	\\end{tikzpicture}
+	\\centering
+\\end{figure}
+$0
+endsnippet
+
+# vim:ft=snippets:
