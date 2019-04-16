@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='/Users/dicai/Downloads/konect-0.2/github'
+let g:netrw_dirhist_2='/Users/dicai/Dropbox/Courses/cs222/pset01'
+let g:netrw_dirhist_3='/Users/dicai/git/graph_package/test'
+let g:netrw_dirhist_4='/Users/dicai/git/graph_package/process'
