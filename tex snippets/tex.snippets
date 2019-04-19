@@ -1,0 +1,307 @@
+# This file contains snippets for typesetting LaTeX
+#
+priority 10
+
+global !p
+
+# Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
+def isbackslash(string):
+    if string == '\\':
+	    return ''
+    return string
+
+# Functions for adding optional superscripts for sums, products, etc.
+def superscriptstart(t):
+	if t:
+	    return '^{'
+	return ''
+def superscriptend(t):
+	if t:
+	    return '}'
+	return ''
+
+endglobal
+
+###########
+# Text Replacement
+############
+
+snippet iff "if and only if"
+if and only if
+endsnippet
+
+#############
+#### Math
+#############
+
+snippet ,, "ldots" iA
+, \\ldots, $0
+endsnippet
+
+snippet ++ "ldots plus" iA
++ \\ldots + $0
+endsnippet
+
+snippet ===  "equals" iA
+&= $0
+endsnippet
+
+snippet ii "item" bA
+\\item $0
+endsnippet
+
+snippet [ "display math" bA
+\\begin{align*}
+	$1
+\\end{align*}
+$0
+endsnippet
+
+snippet : "set condition"
+\\ : \\ $0
+endsnippet
+
+snippet \{ "set" iA
+\\left\\{ $1 \\right\\}$0
+endsnippet
+
+snippet >> ">>" iA
+\\gg
+endsnippet
+
+snippet << "<<" iA
+\\ll
+endsnippet
+
+snippet "([a-zA-Z])bar" "Automatic overline bar" ri
+\\bar{`!p snip.rv=match.group(1)`}
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)bar' "overline bar environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\bar{$1}$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)bcap' "Big cap environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\bigcap_{${1:n=1}}^{${2:\infty}} $0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)bcup' "Big cup environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\bigcup_{${1:n=1}}^{${2:\infty}} $0
+endsnippet
+
+snippet bf "bold"
+\\textbf{$1}$0
+endsnippet
+
+snippet bmat "bmat" iA
+\\begin{bmatrix} $1 \\end{bmatrix} $0
+endsnippet
+
+snippet '(.*?)cal' "math cal" r
+`!p snip.rv = isbackslash(match.group(1))`\\mathcal{${1:C}}$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)cal([A-Z])' "math cal automatic" rA
+`!p snip.rv = isbackslash(match.group(1))`\\mathcal{`!p snip.rv = match.group(2)`}$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)cap' "\Cap environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\cap_{${1:n=1}}^{${2:\infty}} $0
+endsnippet
+
+snippet cd "cdots"
+\\cdots $0
+endsnippet
+
+snippet ceil "ceiling" i
+\\left\\lceil $1 \\right\\rceil $0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)cup' "\Cup environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\cup_{${1:n=1}}^{${2:\infty}} $0
+endsnippet
+
+snippet dm "Display Math" bwA
+\\[
+	$1
+\\]
+$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)es' "Empty set" r
+`!p snip.rv = isbackslash(match.group(1))`\\emptyset$0
+endsnippet
+
+snippet '(.*?)fk' "math frak" r
+`!p snip.rv = isbackslash(match.group(1))`\\mathfrak{${1:C}}$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)fk([A-Z])' "math frak automatic" rA
+`!p snip.rv = isbackslash(match.group(1))`\\mathfrak{`!p snip.rv = match.group(2)`}$0
+endsnippet
+
+snippet floor "floor" i
+\\left\\lfloor $1 \\right\\rfloor$0
+endsnippet
+
+snippet fnote "footnote" i
+\\footnote{$1}$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)frac' "fraction" r
+`!p snip.rv = isbackslash(match.group(1))`\\frac{$1}{$2}$0
+endsnippet
+
+snippet "([a-zA-Z])hat" "Hat over letter on trigger" ri
+\\hat{`!p snip.rv=match.group(1)`}
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)hat' "math hat environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\hat{$1}$0
+endsnippet
+
+snippet invs "inverse" iA
+^{-1}
+endsnippet
+
+snippet it "italic"
+\\textit{$1}$0
+endsnippet
+
+snippet l( "left parentheses" i
+\\left( $1 \\right)$0
+endsnippet
+
+snippet l[ "left sq bracket"
+\\left[ $1 \\right]$0
+endsnippet
+
+snippet l| "left abs"
+\\left| $1 \\right|$0
+endsnippet
+
+snippet ld "ldots"
+\\ldots $0
+endsnippet
+
+snippet lim "limit" w
+\\lim_{${1:n} \\to ${2:\\infty}}
+endsnippet
+
+snippet liminf "liminf" w
+\\limsup_{${1:n} \\to ${2:\\infty}}
+endsnippet
+
+snippet limsup "limsup" w
+\\limsup_{${1:n} \\to ${2:\\infty}}
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)lr' "lrangle" r
+`!p snip.rv = isbackslash(match.group(1))`\\left\\langle $1 \\right\\rangle$0
+endsnippet
+
+snippet nl "new line" A
+\\\\
+&${1:=} $0
+endsnippet
+
+snippet nsubgp "normal subgroup"
+\\trianglelefteq
+endsnippet
+
+snippet part "d/dx" w
+\\frac{\\partial ${1:f}}{\\partial ${2:x}} $0
+endsnippet
+
+snippet pmat "Parentheses matrix" iA
+\\begin{pmatrix} $1 \\end{pmatrix} $0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)prod' "Product environment" wr
+`!p snip.rv = isbackslash(match.group(1))`\\prod_{${1:n=1}}`!p snip.rv = superscriptstart(t[2])`${2:\\infty}`!p snip.rv = superscriptend(t[2])` $0
+endsnippet
+
+snippet qq "quad quad"
+\\quad\\quad $0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)res' "restriction" r
+`!p snip.rv = isbackslash(match.group(1))`\\left. $1 \\right|_{$2} $0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)sb' "subset" r
+`!p snip.rv = isbackslash(match.group(1))`\\subseteq 
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)sc' "math script" r
+`!p snip.rv = isbackslash(match.group(1))`\\mathscr{${1:C}}$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)sc([A-Z])' "math script automatic" rA
+`!p snip.rv = isbackslash(match.group(1))`\\mathscr{`!p snip.rv = match.group(2)`}$0
+endsnippet
+
+snippet sec "section" b
+\\section{$1}
+
+$0
+endsnippet
+
+snippet subsec "subsection" b
+\\subsection{$1}
+
+$0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)sp' "supset" r
+`!p snip.rv = isbackslash(match.group(1))`\\supseteq 
+endsnippet
+
+snippet sq "Square Root" i
+\\sqrt{${1:${VISUAL}}} $0
+endsnippet
+
+snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)sum' "\Sum environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\sum_{${1:n=1}}`!p snip.rv = superscriptstart(t[2])`${2:\\infty}`!p snip.rv = superscriptend(t[2])` $0
+endsnippet
+
+snippet vmat "Vertical Matrix" iA
+\\begin{vmatrix} $1 \\end{vmatrix} $0
+endsnippet
+
+################
+### Tikz
+################
+
+snippet tikz2 "Tikz 2x2" b
+\\[
+	\\begin{tikzcd}
+	$1 & $2 \\\\
+	$3 & $4
+	\\end{tikzcd}
+\\]
+$0
+endsnippet
+
+snippet tikz3 "Tikz 3x3" b
+\\[
+	\\begin{tikzcd}
+	$1 & $2 & $3 \\\\
+	$4 & $5 & $6 \\\\
+	$7 & $8 & $9
+	\\end{tikzcd}
+\\]
+$0
+endsnippet
+
+snippet tpic "Tikz picture environment" b
+\\begin{figure}
+	\\begin{tikzpicture}[h]
+	$1
+	\\end{tikzpicture}
+	\\centering
+\\end{figure}
+$0
+endsnippet
+
+# vim:ft=snippets:
