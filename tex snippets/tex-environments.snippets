@@ -69,6 +69,15 @@ snippet enum "Enumerate" bA
 $0
 endsnippet
 
+snippet eqn "equation" bA
+\\begin{equation}\\label{eqn:$1}
+\\begin{aligned}
+    $2
+\\end{aligned}
+\\end{equation}
+$0
+endsnippet
+
 snippet ex "example"
 \\begin{example} $1
 \\end{example}
@@ -126,6 +135,12 @@ endsnippet
 
 snippet pf "proof"
 \\begin{proof} $1
+\\end{proof}
+$0
+endsnippet
+
+snippet pfthm "Proof of Theorem" bA
+\\begin{proof}[Proof of Theorem~\\ref{thm:$1}] $0
 \\end{proof}
 $0
 endsnippet

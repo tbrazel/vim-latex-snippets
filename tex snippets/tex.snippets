@@ -145,11 +145,12 @@ snippet << "<<" iA
 \\ll
 endsnippet
 
-snippet '([durl]+)ar([abrl]*)' "arrow automatic" r
+snippet '([\s\d,._:=\$\/\(\)\{\}\[\]\\]|^)([durl]+)ar([abrl]*)' "arrow automatic" r
 \\ar[`!p
-snip.rv = parse_arrow_direction(match.group(1))
+snip.rv = parse_arrow_direction(match.group(2))
 `, "${2:label}"`!p
-snip.rv = parse_arrow_label(match.group(1),match.group(2))
+if match.group(3):
+	snip.rv = parse_arrow_label(match.group(2),match.group(3))
 `] $0
 endsnippet
 
@@ -284,17 +285,6 @@ snippet '([\s\d,.\$\/\(\)\{\}\[\]\\]|^)lr' "lrangle" r
 `!p snip.rv = isbackslash(match.group(1))`\\left\\langle $1 \\right\\rangle$0
 endsnippet
 
-# Automatic math environment with post-fix (courtesy of castel.dev)
-# TODO you have to escape this snippet twice, should find a way to fix this
-snippet mk "Math" wA
-\$${1}\$`!p
-if t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:
-	snip.rv = ' '
-else:
-	snip.rv = ''
-`${2}
-endsnippet
-
 snippet nl "new line" A
 \\\\
 &${1:=} $0
@@ -308,7 +298,7 @@ snippet part "d/dx" w
 \\frac{\\partial ${1:f}}{\\partial ${2:x}} $0
 endsnippet
 
-snippet pmat "Parentheses matrix" iA
+snippet pmat "Parentheses matrix" i
 \\begin{pmatrix} $1 \\end{pmatrix} $0
 endsnippet
 
