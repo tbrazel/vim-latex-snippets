@@ -121,40 +121,40 @@ map ,r :w<CR>:silent !/Applications/Skim.app/Contents/SharedSupport/displayline 
 
 filetype off
 
-" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/ultisnips
 call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
 
-	Plugin 'gmarik/Vundle.vim'
+Plugin 'sirver/ultisnips'
+Plugin 'honza/vim-snippets'
+	let g:UltiSnipsSnippetsDirectories = ["mycustomsnippets"]
+	let g:UltiSnipsUsePythonVersion = 3
+	let g:UltiSnipsExpandTrigger="<tab>"
+	let g:UltiSnipsJumpForwardTrigger="<tab>"
+	let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+	let g:UltiSnipsEditSplit="vertical"
 
-	Plugin 'sjl/gundo.vim'
-		nnoremap <Leader>u :GundoToggle<CR>
 
-	Plugin 'derekwyatt/vim-scala'
-	Plugin 'flazz/vim-colorschemes'
-	Plugin 'JuliaLang/julia-vim'
+Plugin 'sjl/gundo.vim'
+	nnoremap <Leader>u :GundoToggle<CR>
 
-	Plugin 'scrooloose/syntastic'
-	Plugin 'SirVer/ultisnips'
-	Plugin 'honza/vim-snippets'
-	Plugin 'severin-lemaignan/vim-minimap'
+Plugin 'derekwyatt/vim-scala'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'JuliaLang/julia-vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'severin-lemaignan/vim-minimap'
 
-		let g:UltiSnipsUsePythonVersion = 3
 
-		let g:UltiSnipsExpandTrigger="<tab>"
-		let g:UltiSnipsJumpForwardTrigger="<tab>"
-		let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-		let g:UltiSnipsEditSplit="vertical"
+Plugin 'lervag/vimtex'
+	let g:tex_flavor='latex'
+	let g:vimtex_view_method='skim'
+	let g:vimtex_quickfix_mode=0
 
-	Plugin 'lervag/vimtex'
-		let g:tex_flavor='latex'
-		let g:vimtex_view_method='skim'
-		let g:vimtex_quickfix_mode=0
 
-set rtp+=~/.vim/bundle/vim-snippets/snippets/
+call vundle#end()
+filetype plugin indent on
 
-call vundle#end()            " required
-filetype plugin on    " required
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -196,6 +196,8 @@ autocmd! BufNewFile * silent! 0r ~/.vim/skel/template.%:e
 " Fix wrapping issue
 autocmd FileType tex    set textwidth=0
 
+" Delete in VISUAL mode
+vmap <Bs> d
 
 """"""""""""""""
 " Other custom commands
@@ -243,3 +245,5 @@ iab SInce Since
 iab jsut just
 iab FOr For
 iab codt cdot
+
+set rtp^=$HOME
