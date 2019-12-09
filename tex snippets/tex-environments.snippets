@@ -1,6 +1,15 @@
-# Snippets for LaTeX environments
+# This file contains snippets for typesetting LaTeX
+#
 priority 10
 
+global !p
+
+# Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
+def isbackslash(string):
+    if string == '\\':
+	    return ''
+    return string
+endglobal
 
 #################
 #### Environments
@@ -27,8 +36,8 @@ snippet all "align2" b
 $0
 endsnippet
 
-snippet case "cases"
-\\begin{cases} $1 & $2 \\\\ $3 & $4 \\end{cases}
+snippet array "array"
+\\begin{array}{$1} $2 \\end{array} $0
 endsnippet
 
 snippet center "centering"
@@ -38,27 +47,46 @@ snippet center "centering"
 $0
 endsnippet
 
-snippet conj "conjecture"
+snippet cex "counterexample"
+\\begin{counterexample}`!p snip.rv='\label{cex:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{counterexample}
+$0
+endsnippet
+
+
+snippet claim "claim" bA
+\\begin{claim}`!p snip.rv='\label{cla:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{claim}
+$0
+endsnippet
+
+snippet conj "conjecture" bA
 \\begin{conjecture} $1
 \\end{conjecture}
 $0
 endsnippet
 
-snippet cor "corollary"
-\\begin{corollary} $1
+snippet cor "corollary" bA
+\\begin{corollary}`!p snip.rv='\label{cor:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{corollary}
 $0
 endsnippet
 
-snippet cust "customenv"
+snippet cust "customenv" bA
 \\begin{customenvironment}{$1} $2
 \\end{customenvironment}
 $0
 endsnippet
 
-snippet def "definition"
-\\begin{definition} $1
+snippet def "definition" bA
+\\begin{definition}`!p snip.rv='\label{def:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{definition}
+$0
+endsnippet
+
+snippet dig "digression" bA
+\\begin{digression}`!p snip.rv='\label{dig:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{digression}
 $0
 endsnippet
 
@@ -78,32 +106,70 @@ snippet eqn "equation" bA
 $0
 endsnippet
 
-snippet ex "example"
-\\begin{example} $1
+snippet example "example" bA
+\\begin{example}`!p snip.rv='\label{ex:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{example}
 $0
 endsnippet
 
-snippet exam "example1"
-\\begin{example} $1
+snippet exa "example1" bA
+\\begin{example}`!p snip.rv='\label{ex:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{example}
 $0
 endsnippet
 
-snippet exer "exercise"
-\\begin{exercise} $1
+snippet exer "exercise" bA
+\\begin{exercise}`!p snip.rv='\label{exer:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{exercise}
 $0
 endsnippet
 
-snippet exs "examples"
-\\begin{examples} $1
+snippet exs "examples" bA
+\\begin{examples}`!p snip.rv='\label{exs:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{examples}
+$0
+endsnippet
+
+snippet fact "fact" bA
+\\begin{fact}`!p snip.rv='\label{fac:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{fact}
+$0
+endsnippet
+
+snippet fig "include figure" b
+\\begin{figure}[h]
+  \\includegraphics[width=\\linewidth]{${1:Filename}}
+  \\centering
+  \\caption{${2:Caption}}
+  \\label{fig:${3:Label Name}}
+\\end{figure}
+$0
+endsnippet
+
+snippet ink "inkscape figure"
+\\begin{figure}[ht]
+    \\centering
+    \\incfig{$1}
+    \\caption{$2}
+    \\label{fig:$3}
+\\end{figure}
+endsnippet
+
+snippet intu "intuition" bA
+\\begin{intuition}`!p snip.rv='\label{int:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{intuition}
 $0
 endsnippet
 
 snippet item "Individual item" bA
 \\item $0
+endsnippet
+
+snippet itemi "Itemize2" bA
+\\begin{itemize}
+	\\item $1
+\\end{itemize}
+$0
 endsnippet
 
 snippet iz "Itemize" bA
@@ -113,27 +179,29 @@ snippet iz "Itemize" bA
 $0
 endsnippet
 
-snippet lem "lemma"
-\\begin{lemma} $1
+snippet lem "lemma" bA
+\\begin{lemma}`!p snip.rv='\label{lem:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{lemma}
 $0
 endsnippet
 
-snippet newc "newcommand"
-\\newcommand{$1}{$0}
+snippet '(\\|^)newc' "new command" r
+`!p snip.rv = isbackslash(match.group(1))`\\newcommand{$1}{$0}
 endsnippet
 
-snippet \newc "newcommand"
-\\newcommand{$1}{$0}
+snippet notation "notation" bA
+\\begin{notation}`!p snip.rv='\label{nota:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{notation}
+$0
 endsnippet
 
-snippet note "note"
-\\begin{note} $1
+snippet note "note" bA
+\\begin{note}`!p snip.rv='\label{note:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{note}
 $0
 endsnippet
 
-snippet pf "proof"
+snippet pf "proof" bA
 \\begin{proof} $1
 \\end{proof}
 $0
@@ -145,37 +213,65 @@ snippet pfthm "Proof of Theorem" bA
 $0
 endsnippet
 
-snippet prop "proposition"
-\\begin{proposition} $1
+snippet prop "proposition" bA
+\\begin{proposition}`!p snip.rv='\label{prop:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{proposition}
 $0
 endsnippet
 
-snippet prov "providecommand"
-\\providecommand{$1}{$0}
+snippet '(\\|^)prov' "provide command" r
+`!p snip.rv = isbackslash(match.group(1))`\\providecommand{$1}{$0}
 endsnippet
 
-snippet renewc "renewcommand"
-\\renewcommand{$1}{$0}
+snippet '(\\|^)renewc' "renewcommand" r
+`!p snip.rv = isbackslash(match.group(1))`\\renewcommand{$1}{$0}
 endsnippet
 
-snippet \renewc "renewcommand"
-\\renewcommand{$1}{$0}
-endsnippet
-
-
-snippet rmk "remark"
-\\begin{remark} $1
+snippet rmk "remark" bA
+\\begin{remark}`!p snip.rv='\label{rmk:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{remark}
 $0
 endsnippet
 
-snippet thm "theorem"
-\\begin{theorem} $1
+snippet tabular "tabular" b
+\\begin{center}
+    \\begin{tabular}{$1}
+    
+    \\end{tabular}
+\\end{center}
+endsnippet
+
+snippet thm "theorem" bA
+\\begin{theorem}`!p snip.rv='\label{thm:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{theorem}
 $0
 endsnippet
 
+snippet upsh "upshot" bA
+\\begin{upshot}`!p snip.rv='\label{upsh:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{upshot}
+$0
+endsnippet
+
+snippet '(\\|^)usep' "Package" br
+`!p snip.rv = isbackslash(match.group(1))`\\usepackage`!p snip.rv='[' if t[1] else ""`${1:options}`!p snip.rv = ']' if t[1] else ""`{${2:package}}$0
+endsnippet
+
+
+
+
+
+
+###
+# Beamer
+###
+
+snippet frame "Frame beamer" b
+\\begin{frame}{$1}
+$2
+\\end{frame}
+$0
+endsnippet
 
 
 # vim:ft=snippets:

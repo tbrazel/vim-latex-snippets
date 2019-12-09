@@ -1,9 +1,9 @@
-# This file contains snippets for typesetting LaTeX
+# Basic commands for faster LaTeX in Vim
+# These use the UltiSnips package: https://github.com/SirVer/ultisnips
 #
-# Main references:
-#	castel.dev
-#	Hotschke vim post (for math-aware ultisnips) https://vi.stackexchange.com/a/18494/
-
+# Some references:
+#	castel.dev's blog post on TeX + Vim
+#	Hotschke's vim stackexchange post for math-aware ultisnips https://vi.stackexchange.com/a/18494/
 
 priority 10
 
@@ -27,9 +27,8 @@ def superscriptend(t):
 		return '}'
 	return ''
 
+# Function mapping Roman letter to Greek letter. Mappings obtained from the standard Greek alphabet keyboard
 def greeklet(string):
-	# List of lowercase Roman letters and the associated mappings to Greek letters
-	# Obtained from the mapping of the standard Greek alphabet keyboard
 	greekAlphabet = [['a','alpha'],['b','beta'],['c','xi'],['d','delta'],['e','epsilon'],['f','phi'],['g','gamma'],['h','eta'],['i','iota'],['k','kappa'],['l','lambda'],['m','mu'],['n','nu'],['o','omega'],['p','pi'],['q','theta'],['r','rho'],['s','sigma'],['t','tau'],['u','upsilon'],['v','omega'],['w','omega'],['x','chi'],['y','psi'],['z','zeta']]
 	romanAlphabet = [j[0] for j in greekAlphabet]
 	if string.lower() in romanAlphabet:
@@ -46,9 +45,9 @@ endglobal
 
 
 global !p
+
+# See https://vi.stackexchange.com/a/18494/
 texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
-# If you have http://www.drchip.org/astronaut/vim/vbafiles/amsmath.vba.gz,
-# you want to add:
 texMathZones += ['texMathZone'+x for x in ['E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS']]
 texIgnoreMathZones = ['texMathText']
 
@@ -60,7 +59,6 @@ def isMath():
     if not set(texIgnoreMathZoneIds).isdisjoint(synstackids):
         return False
     return not set(texMathZoneIds).isdisjoint(synstackids)
-    # isdisjoint() can short-circuit as soon as a match is found
 
 def prose():
 	return not isMath()
@@ -83,13 +81,15 @@ snippet '`([a-zA-Z])' "auto greek letter" rA
 endsnippet
 
 # Automatic math environment with post-fix (courtesy of castel.dev)
+#\$${1}\$`!p
+#if t[0] and t[0][0] not in [',', '.', '?', '-', ' ']:
+#	snip.rv = ' '
+#else:
+#	snip.rv = ''
+#`${0}
+
 snippet mk "Math" wA
-\$${1}\$`!p
-if t[0] and t[0][0] not in [',', '.', '?', '-', ' ']:
-	snip.rv = ' '
-else:
-	snip.rv = ''
-`${0}
+\$$1\$
 endsnippet
 
 context "isMath()"
@@ -130,9 +130,17 @@ snippet '([\s\d\",._=\$\/\(\)\{\}\[\]\\]|^):' "set condition" r
 `!p snip.rv = isbackslash(match.group(1))`\\ : \\ $0
 endsnippet
 
+# Regex Explanation:
+#	Match an asterisk not preceded by an underscore _ or the word "align"
+#	This avoids issues where you accidentally delete the asterisk in "align*" and can't retype it since you are in math mode
 context "isMath()"
-snippet * "dual" iA
-^\\ast
+snippet '(?<!\_)(?<!align)\*' "superscript asterisk" rA
+`!p snip.rv = match.group(1)`^\\ast
+endsnippet
+
+context "isMath()"
+snippet '(_\*)' "subscript asterisk" rA
+_\\ast
 endsnippet
 
 context "isMath()"
@@ -150,48 +158,44 @@ snippet << "<<" iA
 \\ll
 endsnippet
 
-snippet array "array"
-\\begin{array}{$1} $2 \\end{array} $0
-endsnippet
-
 context "isMath()"
-snippet "([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)([a-zA-Z])bar" "Automatic overline bar" riA
+snippet "([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)([a-zA-Z])bar" "Automatic overline bar" riA
 `!p snip.rv = isbackslash(match.group(1))`\\bar{`!p snip.rv=match.group(2)`}
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)bar' "overline bar environment" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bar' "overline bar environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\bar{$1}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)bb([A-Z])' "math blackboard automatic" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bb([A-Z])' "math blackboard automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathbb{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)bbm([\d])' "math blackboard automatic" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bbm([\d])' "math blackboard automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathbbm{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)bcap' "Big cap environment" r
-`!p snip.rv = isbackslash(match.group(1))`\\bigcap_{${1:n=1}}^{${2:\infty}} $0
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bcap' "bigcap environment" r
+`!p snip.rv = isbackslash(match.group(1))`\\bigcap_{${1:n=1}}`!p snip.rv = superscriptstart(t[2])`${2:}`!p snip.rv = superscriptend(t[2])` $0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)bcup' "Big cup environment" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bcup' "Big cup environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\bigcup_{${1:n=1}}^{${2:\infty}} $0
 endsnippet
 
 context "prose()"
-snippet '([\s\,\.\$\(\)\-]|^)bf' "bold" r
+snippet '([\s\,\.\$\(\)\-]|^)bf' "bold" riw
 `!p snip.rv = match.group(1)`\\textbf{$1}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\,\.\$\(\)\-]|^)bf' "bold" r
-`!p snip.rv = match.group(1)`\\mathbf{$1}$0
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bf' "bold" r
+`!p snip.rv = isbackslash(match.group(1))`\\mathbf{$1}$0
 endsnippet
 
 context "isMath()"
@@ -200,18 +204,23 @@ snippet bmat "bmat" i
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)cal' "math cal" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)cal' "math cal" r
 `!p snip.rv = isbackslash(match.group(1))`\\mathcal{${1:C}}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)cal([A-Z])' "math cal automatic" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)cal([A-Z])' "math cal automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathcal{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
 context "isMath()"
 snippet '([\s\d\",.\$\/\(\)\{\}\[\]\\]|^)cap' "\Cap environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\cap_{${1:n=1}}^{${2:\infty}} $0
+endsnippet
+
+context "isMath()"
+snippet case "cases"
+\\begin{cases} $1 & $2 \\\\ $3 & $4 \\end{cases}
 endsnippet
 
 context "isMath()"
@@ -225,7 +234,7 @@ snippet ceil "ceiling" i
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)cup' "\Cup environment" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)cup' "\Cup environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\cup_{${1:n=1}}^{${2:\infty}} $0
 endsnippet
 
@@ -237,17 +246,26 @@ $0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)es' "Empty set" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)es' "Empty set" rA
 `!p snip.rv = isbackslash(match.group(1))`\\emptyset$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)fk' "math frak" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fr' "fraction" r
+`!p snip.rv = isbackslash(match.group(1))`\\frac{$1}{$2}$0
+endsnippet
+
+snippet '([\t\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fra' "fraction" r
+`!p snip.rv = match.group(1) if match.group(1) is not "\\" else ""`\\frac\{$1}\{$2}$0
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fk' "math frak" r
 `!p snip.rv = isbackslash(match.group(1))`\\mathfrak{${1:C}}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)fk([a-zA-Z])' "math frak automatic" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fk([a-zA-Z])' "math frak automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathfrak{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
@@ -261,17 +279,17 @@ snippet fnote "footnote" i
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)frac' "fraction" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)frac' "fraction" r
 `!p snip.rv = isbackslash(match.group(1))`\\frac{$1}{$2}$0
 endsnippet
 
 context "isMath()"
-snippet "([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)([a-zA-Z])hat" "Automatic hat" riA
+snippet "([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)([a-zA-Z])hat" "Automatic hat" riA
 `!p snip.rv = isbackslash(match.group(1))`\\hat{`!p snip.rv=match.group(2)`}
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)hat' "math hat environment" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)hat' "math hat environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\hat{$1}$0
 endsnippet
 
@@ -297,7 +315,7 @@ endsnippet
 # TODO double check this is correct for LaTeX
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)l\(' "left parentheses" riA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)l\(' "left parentheses" riA
 `!p snip.rv = isbackslash(match.group(1))`\\left( $1 \\right)$0
 endsnippet
 
@@ -332,7 +350,7 @@ snippet limsup "limsup" w
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)lr' "lrangle" rA
+snippet '([\s\d,.=\-\$\/\(\)\|\{\}\[\]\\]|^)lr' "lrangle" rA
 `!p snip.rv = isbackslash(match.group(1))`\\left\\langle $1 \\right\\rangle$0
 endsnippet
 
@@ -343,42 +361,43 @@ snippet nl "new line" A
 endsnippet
 
 context "isMath()"
-snippet nsubgp "normal subgroup"
-\\trianglelefteq
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ns' "normal subgroup" r
+`!p snip.rv = isbackslash(match.group(1))`\\nsubgp 
 endsnippet
 
+
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)op' "oplus" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)op' "oplus" r
 `!p snip.rv = isbackslash(match.group(1))`\\oplus$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)op_' "oplus subscript" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)op_' "oplus subscript" rA
 `!p snip.rv = isbackslash(match.group(1))`\\oplus_{$1}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)opp' "oplus plus.." rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)opp' "oplus plus.." rA
 `!p snip.rv = isbackslash(match.group(1))`\\oplus \\ldots \\oplus$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)ot' "otimes" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ot' "otimes" r
 `!p snip.rv = isbackslash(match.group(1))`\\otimes$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)ot_' "otimes subscript" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ot_' "otimes subscript" rA
 `!p snip.rv = isbackslash(match.group(1))`\\otimes_{$1}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)ott' "otimes times.." rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ott' "otimes times.." rA
 `!p snip.rv = isbackslash(match.group(1))`\\otimes \\cdots \\otimes$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)ov' "overset" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ov' "overset" r
 `!p snip.rv = isbackslash(match.group(1))`\\overset{${1:above}}{${2:below}}$0
 endsnippet
 
@@ -393,7 +412,7 @@ snippet pmat "Parentheses matrix" i
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)prod' "Product environment" wr
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)prod' "Product environment" wr
 `!p snip.rv = isbackslash(match.group(1))`\\prod_{${1:n=1}}`!p snip.rv = superscriptstart(t[2])`${2:\\infty}`!p snip.rv = superscriptend(t[2])` $0
 endsnippet
 
@@ -403,27 +422,27 @@ snippet qq "quad quad" A
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)res' "restriction" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)res' "restriction" rA
 `!p snip.rv = isbackslash(match.group(1))`\\left. $1 \\right|_{ $2 }$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)sb' "subset" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sb' "subset" r
 `!p snip.rv = isbackslash(match.group(1))`\\subseteq 
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)sbn' "subsetneq" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sbn' "subsetneq" r
 `!p snip.rv = isbackslash(match.group(1))`\\subsetneq 
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)sc' "math script" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sc' "math script" r
 `!p snip.rv = isbackslash(match.group(1))`\\mathscr{${1:C}}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)sc([A-Z])' "math script automatic" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sc([A-Z])' "math script automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathscr{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
@@ -447,27 +466,27 @@ $0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)sp' "supset" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sp' "supset" r
 `!p snip.rv = isbackslash(match.group(1))`\\supseteq 
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)spn' "supsetneq" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)spn' "supsetneq" r
 `!p snip.rv = isbackslash(match.group(1))`\\supsetneq 
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\(\)\{\}\[\]\\]|^)sq' "Square Root" ir
-`!p snip.rv = isbackslash(match.group(1))`\\sqrt{${1:${VISUAL}}}$0
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sq' "Square Root" ir
+`!p snip.rv = isbackslash(match.group(1))`\\sqrt{$1}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d,.\$\/\(\)\|\{\}\[\]\\]|^)sum' "\Sum environment" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sum' "\Sum environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\sum_{${1:n=1}}`!p snip.rv = superscriptstart(t[2])`${2:\\infty}`!p snip.rv = superscriptend(t[2])` $0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\{\}\[\]\\]|^)til' "overline tilde environment" r
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)til' "overline tilde environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\widetilde{$1}$0
 endsnippet
 
@@ -479,6 +498,16 @@ endsnippet
 ################
 ### Tikz
 ################
+
+snippet pbup "tikz diagram: pullback, universal property" b
+\\[ \\begin{tikzcd}
+	$1\ar[dr,${2:dashed,} "$3"]\ar[drr,bend left=30, "$4$ above right]\ar[ddr,bend right=30, "$5" below left] && \\\\
+	& $6\rar["$7" above]\dar["$8" left]\pb & $9\dar["$10" right] \\\\
+	& $11\rar["$12" below] & $13
+\\end{tikzcd} \\]
+$0
+
+endsnippet
 
 snippet tikz2 "Tikz 2x2" b
 \\[ \\begin{tikzcd}
@@ -537,10 +566,6 @@ endsnippet
 
 snippet iff "if and only if"
 if and only if
-endsnippet
-
-snippet inveritble "" A
-invertible
 endsnippet
 
 snippet Kahler "Kahler" A
