@@ -9,6 +9,24 @@ def isbackslash(string):
     if string == '\\':
 	    return ''
     return string
+
+
+# See https://vi.stackexchange.com/a/18494/
+texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
+texMathZones += ['texMathZone'+x for x in ['E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS']]
+texIgnoreMathZones = ['texMathText']
+
+texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
+texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
+
+def isMath():
+    synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
+    if not set(texIgnoreMathZoneIds).isdisjoint(synstackids):
+        return False
+    return not set(texMathZoneIds).isdisjoint(synstackids)
+
+def prose():
+	return not isMath()
 endglobal
 
 #################
@@ -201,6 +219,7 @@ snippet note "note" bA
 $0
 endsnippet
 
+context "prose()"
 snippet pf "proof" bA
 \\begin{proof} $1
 \\end{proof}

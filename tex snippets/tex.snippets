@@ -28,8 +28,11 @@ def superscriptend(t):
 	return ''
 
 # Function mapping Roman letter to Greek letter. Mappings obtained from the standard Greek alphabet keyboard
+
+greekAlphabet = [['a','alpha'],['b','beta'],['c','xi'],['d','delta'],['e','epsilon'],['f','phi'],['g','gamma'],['h','eta'],['i','iota'],['k','kappa'],['l','lambda'],['m','mu'],['n','nu'],['o','omega'],['p','pi'],['q','theta'],['r','rho'],['s','sigma'],['t','tau'],['u','upsilon'],['v','omega'],['w','omega'],['x','chi'],['y','psi'],['z','zeta']]
+
+
 def greeklet(string):
-	greekAlphabet = [['a','alpha'],['b','beta'],['c','xi'],['d','delta'],['e','epsilon'],['f','phi'],['g','gamma'],['h','eta'],['i','iota'],['k','kappa'],['l','lambda'],['m','mu'],['n','nu'],['o','omega'],['p','pi'],['q','theta'],['r','rho'],['s','sigma'],['t','tau'],['u','upsilon'],['v','omega'],['w','omega'],['x','chi'],['y','psi'],['z','zeta']]
 	romanAlphabet = [j[0] for j in greekAlphabet]
 	if string.lower() in romanAlphabet:
 		roman_index = romanAlphabet.index(string.lower())
@@ -97,6 +100,15 @@ snippet ,, "ldots" iA
 , \\ldots, $0
 endsnippet
 
+# Particular regex to expand things of the form a_1, \ldots, a_n or \alpha_1, \ldots \alpha_n:
+#	Expand by writing a_.
+#	This regex is rough, and this snippet is not to be used widely, only in particular cases
+context "isMath()"
+snippet '([\s\d\",._=\$\/\(\)\{\}\[\]]|^)([a-zA-Z]+|\\[a-zA-Z]+)\_\.' "list of subscripts" rA
+`!p snip.rv = match.group(1) + match.group(2)`_1, \\ldots, `!p snip.rv = match.group(2)`_$0
+endsnippet
+
+
 context "isMath()"
 snippet ++ "ldots plus" iA
 + \\ldots + $0
@@ -135,7 +147,7 @@ endsnippet
 #	This avoids issues where you accidentally delete the asterisk in "align*" and can't retype it since you are in math mode
 context "isMath()"
 snippet '(?<!\_)(?<!align)\*' "superscript asterisk" rA
-`!p snip.rv = match.group(1)`^\\ast
+^\\ast
 endsnippet
 
 context "isMath()"
@@ -219,6 +231,11 @@ snippet '([\s\d\",.\$\/\(\)\{\}\[\]\\]|^)cap' "\Cap environment" r
 endsnippet
 
 context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)capp' "cap cdots.." rA
+`!p snip.rv = isbackslash(match.group(1))`\\cap \\cdots \\cap$0
+endsnippet
+
+context "isMath()"
 snippet case "cases"
 \\begin{cases} $1 & $2 \\\\ $3 & $4 \\end{cases}
 endsnippet
@@ -237,6 +254,12 @@ context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)cup' "\Cup environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\cup_{${1:n=1}}^{${2:\infty}} $0
 endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)cupp' "cup cdots.." rA
+`!p snip.rv = isbackslash(match.group(1))`\\cup \\cdots \\cup$0
+endsnippet
+
 
 snippet dm "Display Math" bwA
 \\[
@@ -304,12 +327,12 @@ snippet invs "inverse" iA
 endsnippet
 
 context "prose()"
-snippet '([\s\,\.\$\(\)\-]|^)it' "italic" r
+snippet '([\s\,\.\$\(\)\[\]\-]|^)it' "italic" r
 `!p snip.rv = match.group(1)`\\textit{$1}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\,\.\$\(\)\-]|^)it' "italic" r
+snippet '([\s\,\.\$\(\)\{\}\[\]\-]|^)it' "italic" r
 `!p snip.rv = match.group(1)`\\mathit{$1}$0
 endsnippet
 # TODO double check this is correct for LaTeX
@@ -422,8 +445,8 @@ snippet qq "quad quad" A
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)res' "restriction" rA
-`!p snip.rv = isbackslash(match.group(1))`\\left. $1 \\right|_{ $2 }$0
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]]|^)res' "restriction" rA
+`!p snip.rv =match.group(1)`\\left. $1 \\right|_{ $2 }$0
 endsnippet
 
 context "isMath()"
