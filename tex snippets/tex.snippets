@@ -201,7 +201,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bcup' "Big cup environment" r
 endsnippet
 
 context "prose()"
-snippet '([\s\,\.\$\(\)\-]|^)bf' "bold" riw
+snippet '([\s\,\.`\$\(\)\[\]\{\}\-]|^)bf' "bold" riw
 `!p snip.rv = match.group(1)`\\textbf{$1}$0
 endsnippet
 
@@ -327,7 +327,7 @@ snippet invs "inverse" iA
 endsnippet
 
 context "prose()"
-snippet '([\s\,\.\$\(\)\[\]\-]|^)it' "italic" r
+snippet '([\s\,\.`\$\(\)\[\]\{\}\-]|^)it' "italic" r
 `!p snip.rv = match.group(1)`\\textit{$1}$0
 endsnippet
 
@@ -516,6 +516,11 @@ endsnippet
 context "isMath()"
 snippet vmat "Vertical Matrix" i
 \\begin{vmatrix} $1 \\end{vmatrix} $0
+endsnippet
+
+context "isMath()"
+snippet xx "cross" iA
+^\\times
 endsnippet
 
 ################
