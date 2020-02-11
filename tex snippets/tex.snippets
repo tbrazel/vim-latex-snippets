@@ -29,18 +29,16 @@ def superscriptend(t):
 
 # Function mapping Roman letter to Greek letter. Mappings obtained from the standard Greek alphabet keyboard
 
-greekAlphabet = [['a','alpha'],['b','beta'],['c','xi'],['d','delta'],['e','epsilon'],['f','phi'],['g','gamma'],['h','eta'],['i','iota'],['k','kappa'],['l','lambda'],['m','mu'],['n','nu'],['o','omega'],['p','pi'],['q','theta'],['r','rho'],['s','sigma'],['t','tau'],['u','upsilon'],['v','omega'],['w','omega'],['x','chi'],['y','psi'],['z','zeta']]
+greekDict = {'a': 'alpha', 'b': 'beta', 'c': 'xi', 'd': 'delta', 'e': 'epsilon', 'f': 'phi', 'g': 'ga    mma', 'h': 'eta', 'i': 'iota', 'k': 'kappa', 'l': 'lambda', 'm': 'mu', 'n': 'nu', 'o': 'omega', 'p':     'pi', 'q': 'theta', 'r': 'rho', 's': 'sigma', 't': 'tau', 'u': 'upsilon', 'v': 'omega', 'w': 'omega',     'x': 'chi', 'y': 'psi', 'z': 'zeta'}
 
 
 def greeklet(string):
-	romanAlphabet = [j[0] for j in greekAlphabet]
-	if string.lower() in romanAlphabet:
-		roman_index = romanAlphabet.index(string.lower())
-		greek_letter = greekAlphabet[roman_index][1]
+	lower = string.lower()
+	if lower in romanAlphabet:
 		if string.isupper():
-			return greek_letter.capitalize()
+			return greekDict[lower].capitalize()
 		else:
-			return greek_letter
+			return greekDict[lower]
 	else:
 		return 'ERR'
 
