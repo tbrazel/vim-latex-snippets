@@ -34,7 +34,7 @@ greekDict = {'a': 'alpha', 'b': 'beta', 'c': 'xi', 'd': 'delta', 'e': 'epsilon',
 
 def greeklet(string):
 	lower = string.lower()
-	if lower in romanAlphabet:
+	if lower in greekDict:
 		if string.isupper():
 			return greekDict[lower].capitalize()
 		else:
@@ -154,7 +154,7 @@ _\\ast
 endsnippet
 
 context "isMath()"
-snippet \{ "set" iA
+snippet {{ "set" iA
 \\left\\{ $1 \\right\\}$0
 endsnippet
 
