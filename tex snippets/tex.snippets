@@ -178,6 +178,12 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bar' "overline bar environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\bar{$1}$0
 endsnippet
 
+# RIP Regex
+context "isMath()"
+snippet '(\\)((A|a)lpha|(B|b)eta|(C|c)i|(D|d)elta|(E|e)psilon|(F|f)hi|(G|g)amma|(H|h)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(Q|q)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(V|v)mega|(W|w)mega|(X|x)hi|(Y|y)si|(Z|z)eta)b' "greek letter bar" rA
+\\bar{\\`!p snip.rv = match.group(2)`}
+endsnippet
+
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bb([A-Z])' "math blackboard automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathbb{`!p snip.rv = match.group(2)`}$0
@@ -315,6 +321,12 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)hat' "math hat environment" r
 endsnippet
 
 context "isMath()"
+snippet '(\\)((A|a)lpha|(B|b)eta|(C|c)i|(D|d)elta|(E|e)psilon|(F|f)hi|(G|g)amma|(H|h)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(Q|q)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(V|v)mega|(W|w)mega|(X|x)hi|(Y|y)si|(Z|z)eta)h' "greek letter hat" rA
+\\hat{\\`!p snip.rv = match.group(2)`}
+endsnippet
+
+
+context "isMath()"
 snippet inf "infimum" w
 \\inf_{${1:x\in X}} $0
 endsnippet
@@ -373,6 +385,11 @@ endsnippet
 context "isMath()"
 snippet '([\s\d,.=\-\$\/\(\)\|\{\}\[\]\\]|^)lr' "lrangle" rA
 `!p snip.rv = isbackslash(match.group(1))`\\left\\langle $1 \\right\\rangle$0
+endsnippet
+
+context "isMath()"
+snippet '([\s\d,.=\-\$\/\(\)\|\{\}\[\]\\]|^)mod' "modulo" ir
+`!p snip.rv = isbackslash(match.group(1))`\\equiv $1 \\pmod{$2}
 endsnippet
 
 context "isMath()"
@@ -502,6 +519,11 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sq' "Square Root" ir
 endsnippet
 
 context "isMath()"
+snippet sqc "square class" iA
+$1^\\times / \\left( $1^\\times \\right)^2
+endsnippet
+
+context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sum' "\Sum environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\sum_{${1:n=1}}`!p snip.rv = superscriptstart(t[2])`${2:\\infty}`!p snip.rv = superscriptend(t[2])` $0
 endsnippet
@@ -510,6 +532,12 @@ context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)til' "overline tilde environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\widetilde{$1}$0
 endsnippet
+
+context "isMath()"
+snippet '(\\)((A|a)lpha|(B|b)eta|(C|c)i|(D|d)elta|(E|e)psilon|(F|f)hi|(G|g)amma|(H|h)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(Q|q)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(V|v)mega|(W|w)mega|(X|x)hi|(Y|y)si|(Z|z)eta)t' "greek letter tilde" rA
+\\til{\\`!p snip.rv = match.group(2)`}
+endsnippet
+
 
 context "isMath()"
 snippet vmat "Vertical Matrix" i
