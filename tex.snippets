@@ -67,15 +67,16 @@ def prose():
 
 # Python code for expanding nxn tikz commutative diagrams
 def tikzcd(snip):
-	height = int(snip.buffer[snip.line])
+	digits = snip.buffer[snip.line].split('x')
+	rows = int(digits[0])
+	columns = int(digits[1])
 	snip.buffer[snip.line] = ''
 	row = []
-	for i in range(0,height):
-		irow = '\t' + ' & '.join(['$' + str(i*height+j+1) for j in range(height)]) + '\\\\\\\\' + '\n'
+	for i in range(0,rows):
+		irow = '\t' + ' & '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\\\\\\\\' + '\n'
 		row.append(irow)
 	output = '\\[ \\begin{tikzcd}\n' + ''.join(row) + '\\end{tikzcd} \\]\n$0'
 	snip.expand_anon(output)
-
 
 endglobal
 
@@ -607,11 +608,19 @@ $0
 
 endsnippet
 
-# Calls the Python tikzcd function to create an nxn diagram 
+# Calls the Python tikzcd function to create an mxn diagram 
 post_jump "tikzcd(snip)"
-snippet 't(\d+)' "tikz nxn diagram" br
+snippet 't(\d+x\d+)' "tikz mxn diagram" br
 `!p snip.rv = match.group(1)`
 endsnippet
+
+# As a special case of the snippet above, produce an nxn diagram
+post_jump "tikzcd(snip)"
+snippet 't(\d+)' "tikz nxn diagram" br
+`!p snip.rv = match.group(1) + 'x' + match.group(1)`
+endsnippet
+
+
 
 
 snippet tikzamp "tikz ampersand replacement"
