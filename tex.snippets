@@ -64,6 +64,19 @@ def isMath():
 def prose():
 	return not isMath()
 
+
+# Python code for expanding nxn tikz commutative diagrams
+def tikzcd(snip):
+	height = int(snip.buffer[snip.line])
+	snip.buffer[snip.line] = ''
+	row = []
+	for i in range(0,height):
+		irow = '\t' + ' & '.join(['$' + str(i*height+j+1) for j in range(height)]) + '\\\\\\\\' + '\n'
+		row.append(irow)
+	output = '\\[ \\begin{tikzcd}\n' + ''.join(row) + '\\end{tikzcd} \\]\n$0'
+	snip.expand_anon(output)
+
+
 endglobal
 
 ##############################################
@@ -310,6 +323,12 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)frac' "fraction" r
 `!p snip.rv = isbackslash(match.group(1))`\\frac{$1}{$2}
 endsnippet
 
+# Autofrac - from https://github.com/gillescastel/latex-snippets/blob/master/tex.snippets
+context "isMath()"
+snippet '((\d+)|(\d*)(\\)?([A-Za-z]+)((\^|_)(\{\d+\}|\d))*)//' "symbol frac" wrA
+\\frac{`!p snip.rv = match.group(1)`}{$1}$0
+endsnippet
+
 context "isMath()"
 snippet "([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)([a-zA-Z])hat" "Automatic hat" riA
 `!p snip.rv = isbackslash(match.group(1))`\\hat{`!p snip.rv=match.group(2)`}
@@ -363,6 +382,17 @@ snippet l| "left abs" iA
 endsnippet
 
 context "isMath()"
+snippet l; "left brace" iA
+\\left\\{ $1 \\right\\}
+endsnippet
+
+context "isMath()"
+snippet lp "left par" iA
+\\left( $1 \\right)
+endsnippet
+
+
+context "isMath()"
 snippet ld "ldots"
 \\ldots $0
 endsnippet
@@ -385,6 +415,11 @@ endsnippet
 context "isMath()"
 snippet '([\s\d,.=\-\$\/\(\)\|\{\}\[\]\\]|^)lr' "lrangle" rA
 `!p snip.rv = isbackslash(match.group(1))`\\left\\langle $1 \\right\\rangle$0
+endsnippet
+
+context "isMath()"
+snippet \\mapsto "&mapsto" iA
+&\\mapsto
 endsnippet
 
 context "isMath()"
@@ -524,6 +559,11 @@ $1^\\times / \\left( $1^\\times \\right)^2
 endsnippet
 
 context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sto' "isomorphic arrow" rA
+`!p snip.rv = isbackslash(match.group(1))`\\xto{\\sim} 
+endsnippet
+
+context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sum' "\Sum environment" r
 `!p snip.rv = isbackslash(match.group(1))`\\sum_{${1:n=1}}`!p snip.rv = superscriptstart(t[2])`${2:\\infty}`!p snip.rv = superscriptend(t[2])` $0
 endsnippet
@@ -538,6 +578,10 @@ snippet '(\\)((A|a)lpha|(B|b)eta|(C|c)i|(D|d)elta|(E|e)psilon|(F|f)hi|(G|g)amma|
 \\til{\\`!p snip.rv = match.group(2)`}
 endsnippet
 
+context "isMath()"
+snippet \\to "&to" iA
+&\\to
+endsnippet
 
 context "isMath()"
 snippet vmat "Vertical Matrix" i
@@ -563,22 +607,12 @@ $0
 
 endsnippet
 
-snippet tikz2 "Tikz 2x2" b
-\\[ \\begin{tikzcd}
-	$1 & $2 \\\\
-	$3 & $4
-\\end{tikzcd} \\]
-$0
+# Calls the Python tikzcd function to create an nxn diagram 
+post_jump "tikzcd(snip)"
+snippet 't(\d+)' "tikz nxn diagram" br
+`!p snip.rv = match.group(1)`
 endsnippet
 
-snippet tikz3 "Tikz 3x3" b
-\\[ \\begin{tikzcd}
-	$1 & $2 & $3 \\\\
-	$4 & $5 & $6 \\\\
-	$7 & $8 & $9
-\\end{tikzcd} \\]
-$0
-endsnippet
 
 snippet tikzamp "tikz ampersand replacement"
 \\begin{tikzcd}[ampersand replacement=\\&]
