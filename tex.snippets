@@ -108,11 +108,38 @@ def matrix(snip):
 	output = output + '\n\\\\end{' + matx_letter + 'matrix}'
 	snip.expand_anon(output)
 
+# Code for creating tikzcd with ampersand replacement
+def tikz_amp(snip):
+	output = ''
+	line = snip.buffer[snip.line]
+
+	start = int(snip.snippet_start[1])
+	end = int(snip.snippet_end[1])
+
+	start_of_line = line[0:start]
+	snip_match = line[start:end]
+	
+	# Get dimension of pmatrix
+	digits = snip_match.split('x')
+	rows = int(digits[0])
+	columns = int(digits[1])
+
+	# Keep the whole line before the snippet match
+	snip.buffer[snip.line] = start_of_line
+
+	row = []
+	for i in range(0,rows):
+		irow = '\t' + ' & '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\\\\\\\\' + '\n'
+		row.append(irow)
+
+	output = '\\\\begin{tikzcd}[ampersand replacement = \\\\&]\n' + ''.join(row) + '\\end{tikzcd}\n$0'
+	snip.expand_anon(output)
+
 endglobal
 
 ##############################################
 
-# Custom #
+# Custom Tikz Snippets #
 
 ##############################################
 
@@ -124,14 +151,6 @@ context "isMath()"
 snippet '`([a-zA-Z])' "auto greek letter" rA
 \\`!p snip.rv = greeklet(match.group(1))`$0
 endsnippet
-
-# Automatic math environment with post-fix (courtesy of castel.dev)
-#\$${1}\$`!p
-#if t[0] and t[0][0] not in [',', '.', '?', '-', ' ']:
-#	snip.rv = ' '
-#else:
-#	snip.rv = ''
-#`${0}
 
 snippet mk "Math" wA
 \$$1\$
@@ -150,7 +169,6 @@ snippet '([\s\d\",._=\$\/\(\)\{\}\[\]]|^)([a-zA-Z]+|\\[a-zA-Z]+)\_\.' "list of s
 `!p snip.rv = match.group(1) + match.group(2)`_1, \\ldots, `!p snip.rv = match.group(2)`_$0
 endsnippet
 
-
 context "isMath()"
 snippet ++ "ldots plus" iA
 + \\ldots + $0
@@ -161,6 +179,7 @@ snippet :: "projective coordinates" iA
 : \\ldots : $0
 endsnippet
 
+# For use in align environments
 context "isMath()"
 snippet ==  "equals" iA
 &= $0
@@ -224,7 +243,7 @@ endsnippet
 
 # RIP Regex
 context "isMath()"
-snippet '(\\)((A|a)lpha|(B|b)eta|(C|c)i|(D|d)elta|(E|e)psilon|(F|f)hi|(G|g)amma|(H|h)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(Q|q)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(V|v)mega|(W|w)mega|(X|x)hi|(Y|y)si|(Z|z)eta)b' "greek letter bar" rA
+snippet '(\\)((A|a)lpha|(B|b)eta|(X|x)i|(D|d)elta|(E|e)psilon|(P|p)hi|(G|g)amma|(E|e)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(T|t)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(O|o)mega|(C|c)hi|(P|p)si|(Z|z)eta)b' "greek letter bar" rA
 \\bar{\\`!p snip.rv = match.group(2)`}
 endsnippet
 
@@ -371,7 +390,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)hat' "math hat environment" r
 endsnippet
 
 context "isMath()"
-snippet '(\\)((A|a)lpha|(B|b)eta|(C|c)i|(D|d)elta|(E|e)psilon|(F|f)hi|(G|g)amma|(H|h)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(Q|q)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(V|v)mega|(W|w)mega|(X|x)hi|(Y|y)si|(Z|z)eta)h' "greek letter hat" rA
+snippet '(\\)((A|a)lpha|(B|b)eta|(X|x)i|(D|d)elta|(E|e)psilon|(P|p)hi|(G|g)amma|(E|e)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(T|t)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(O|o)mega|(C|c)hi|(P|p)si|(Z|z)eta)h' "greek letter hat" rA
 \\hat{\\`!p snip.rv = match.group(2)`}
 endsnippet
 
@@ -605,7 +624,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)til' "overline tilde environment" 
 endsnippet
 
 context "isMath()"
-snippet '(\\)((A|a)lpha|(B|b)eta|(C|c)i|(D|d)elta|(E|e)psilon|(F|f)hi|(G|g)amma|(H|h)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(Q|q)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(V|v)mega|(W|w)mega|(X|x)hi|(Y|y)si|(Z|z)eta)t' "greek letter tilde" rA
+snippet '(\\)((A|a)lpha|(B|b)eta|(X|x)i|(D|d)elta|(E|e)psilon|(P|p)hi|(G|g)amma|(E|e)ta|(I|i)ota|(K|k)appa|(L|l)ambda|(M|m)u|(N|n)u|(O|o)mega|(P|p)i|(T|t)heta|(R|r)ho|(S|s)igma|(T|t)au|(U|u)psilon|(O|o)mega|(C|c)hi|(P|p)si|(Z|z)eta)t' "greek letter tilde" rA
 \\til{\\`!p snip.rv = match.group(2)`}
 endsnippet
 
@@ -625,7 +644,7 @@ snippet xx "cross" iA
 endsnippet
 
 ################
-### Tikz
+### Tikzcd and matrices of arbitrary size
 ################
 
 snippet pbup "tikz diagram: pullback, universal property" b
@@ -650,6 +669,17 @@ snippet 't(\d+)' "tikz nxn diagram" br
 `!p snip.rv = match.group(1) + 'x' + match.group(1)`
 endsnippet
 
+# Makes tikzcd with ampersand replacement of size mxn
+post_jump "tikz_amp(snip)"
+snippet 'tam(\d+x\d+)' "mxn pmatrix" r
+`!p snip.rv = match.group(1)`
+endsnippet
+
+# Makes square tikzcd with ampersand replacement of size mxn
+post_jump "tikz_amp(snip)"
+snippet 'tam(\d+)' "mxn pmatrix" r
+`!p snip.rv = match.group(1) + 'x' + match.group(1)`
+endsnippet
 
 # Makes [bpv]matrix of arbitrary size
 post_jump "matrix(snip)"
@@ -664,24 +694,7 @@ snippet '([bpv])(\d+)' "square pmatrix" r
 endsnippet
 
 
-
-
-
-snippet tikzamp "tikz ampersand replacement"
-\\begin{tikzcd}[ampersand replacement=\\&]
-    $1 \\& $2 \\\\
-    $3 \\& $4 \\\\
-\\end{tikzcd} $0
-endsnippet
-
-snippet tdiag "tikz diagonal"
-\\[ \\begin{tikzcd}[column sep=small]
-    $1 & $2 & $3 \\\\
-    $4 & $5 & $6 \\\\
-    $7 & $8 & $9
-\\end{tikzcd} \\]
-$0
-endsnippet
+##
 
 snippet tpic "Tikz picture environment" b
 \\begin{figure}
@@ -692,6 +705,8 @@ snippet tpic "Tikz picture environment" b
 \\end{figure}
 $0
 endsnippet
+
+
 
 ############
 # Text Replacement
