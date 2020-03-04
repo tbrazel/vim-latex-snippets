@@ -260,6 +260,12 @@ snippet tabular "tabular" b
 \\end{center}
 endsnippet
 
+snippet termino "terminology" bA
+\\begin{terminology}`!p snip.rv='\label{term:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{terminology}
+$0
+endsnippet
+
 snippet thm "theorem" bA
 \\begin{theorem}`!p snip.rv='\label{thm:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
 \\end{theorem}
