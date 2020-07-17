@@ -1,0 +1,182 @@
+# Basic commands for faster LaTeX in Vim
+# These use the UltiSnips package: https://github.com/SirVer/ultisnips
+#
+# Some references:
+#	castel.dev's blog post on TeX + Vim
+#	Hotschke's vim stackexchange post for math-aware ultisnips https://vi.stackexchange.com/a/18494/
+priority 10
+global !p
+import re
+
+# Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
+def isbackslash(string):
+    if string == '\\':
+	    return ''
+    return string
+
+# Functions for adding optional superscripts for sums, products, etc.
+def superscriptstart(t):
+	if t:
+		return '^{'
+	return ''
+def superscriptend(t):
+	if t:
+		return '}'
+	return ''
+
+# Function mapping Roman letter to Greek letter. Mappings obtained from the standard Greek alphabet keyboard
+
+greekDict = {'a': 'alpha', 'b': 'beta', 'c': 'xi', 'd': 'delta', 'e': 'epsilon', 'f': 'phi', 'g': 'gamma', 'h': 'eta', 'i': 'iota', 'k': 'kappa', 'l': 'lambda', 'm': 'mu', 'n': 'nu', 'o': 'omega', 'p':     'pi', 'q': 'theta', 'r': 'rho', 's': 'sigma', 't': 'tau', 'u': 'upsilon', 'v': 'omega', 'w': 'omega',     'x': 'chi', 'y': 'psi', 'z': 'zeta'}
+
+
+def greeklet(string):
+	lower = string.lower()
+	if lower in greekDict:
+		if string.isupper():
+			return greekDict[lower].capitalize()
+		else:
+			return greekDict[lower]
+	else:
+		return 'ERR'
+
+endglobal
+
+
+global !p
+
+# See https://vi.stackexchange.com/a/18494/
+texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
+texMathZones += ['texMathZone'+x for x in ['E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS']]
+texIgnoreMathZones = ['texMathText']
+
+texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
+texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
+
+def isMath():
+    synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
+    if not set(texIgnoreMathZoneIds).isdisjoint(synstackids):
+        return False
+    return not set(texMathZoneIds).isdisjoint(synstackids)
+
+def prose():
+	return not isMath()
+
+
+# Python code for expanding nxn tikz commutative diagrams
+def tikzcd(snip):
+	digits = snip.buffer[snip.line].split('x')
+	rows = int(digits[0])
+	columns = int(digits[1])
+	snip.buffer[snip.line] = ''
+	row = []
+	for i in range(0,rows):
+		irow = '\t' + ' & '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\\\\\\\\' + '\n'
+		row.append(irow)
+	output = '\\[ \\begin{tikzcd}\n' + ''.join(row) + '\\end{tikzcd} \\]\n$0'
+	snip.expand_anon(output)
+
+# Code for creating pmatrices of arbitrary size
+def matrix(snip):
+	output = ''
+	line = snip.buffer[snip.line]
+
+	start = int(snip.snippet_start[1])
+	end = int(snip.snippet_end[1])
+
+	start_of_line = line[0:start]
+	snip_match = line[start:end]
+
+	# Get type of matrix
+	matx_letter = str(snip_match[:1])
+	dimension = snip_match[1:]
+	
+	# Get dimension of pmatrix
+	digits = dimension.split('x')
+	rows = int(digits[0])
+	columns = int(digits[1])
+
+	# Keep the whole line before the snippet match
+	snip.buffer[snip.line] = start_of_line
+
+	output = '\\\\begin{' + matx_letter + 'matrix}'
+	for i in range(0,rows):
+		output = output + '\n' + ' & '.join(['$' + str(i*columns + j+1) for j in range(columns)]) + '\\\\\\\\'
+	
+	output = output + '\n\\\\end{' + matx_letter + 'matrix}'
+	snip.expand_anon(output)
+
+# Code for creating tikzcd with ampersand replacement
+def tikz_amp(snip):
+	output = ''
+	line = snip.buffer[snip.line]
+
+	start = int(snip.snippet_start[1])
+	end = int(snip.snippet_end[1])
+
+	start_of_line = line[0:start]
+	snip_match = line[start:end]
+	
+	# Get dimension of pmatrix
+	digits = snip_match.split('x')
+	rows = int(digits[0])
+	columns = int(digits[1])
+
+	# Keep the whole line before the snippet match
+	snip.buffer[snip.line] = start_of_line
+
+	row = []
+	for i in range(0,rows):
+		irow = '\t' + ' & '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\\\\\\\\' + '\n'
+		row.append(irow)
+
+	output = '\\\\begin{tikzcd}[ampersand replacement = \\\\&]\n' + ''.join(row) + '\\end{tikzcd}\n$0'
+	snip.expand_anon(output)
+
+
+
+endglobal
+
+##############################################
+
+# Calls the Python tikzcd function to create an mxn diagram 
+post_jump "tikzcd(snip)"
+snippet 't(\d+x\d+)' "tikz mxn diagram" br
+`!p snip.rv = match.group(1)`
+endsnippet
+
+# As a special case of the snippet above, produce a square nxn diagram
+post_jump "tikzcd(snip)"
+snippet 't(\d+)' "tikz nxn diagram" br
+`!p snip.rv = match.group(1) + 'x' + match.group(1)`
+endsnippet
+
+# Makes tikzcd with ampersand replacement of size mxn
+post_jump "tikz_amp(snip)"
+snippet 'tam(\d+x\d+)' "mxn pmatrix" r
+`!p snip.rv = match.group(1)`
+endsnippet
+
+# Makes square tikzcd with ampersand replacement of size mxn
+post_jump "tikz_amp(snip)"
+snippet 'tam(\d+)' "mxn pmatrix" r
+`!p snip.rv = match.group(1) + 'x' + match.group(1)`
+endsnippet
+
+# Makes [bpv]matrix of arbitrary size
+post_jump "matrix(snip)"
+snippet '([bpv]\d+x\d+)' "mxn pmatrix" r
+`!p snip.rv = match.group(1)`
+endsnippet
+
+# Makes square matrix
+post_jump "matrix(snip)"
+snippet '([bpv])(\d+)' "square pmatrix" r
+`!p snip.rv = match.group(1) + match.group(2) + 'x' + match.group(2)`
+endsnippet
+
+
+
+
+
+
+# vim:ft=snippets:
