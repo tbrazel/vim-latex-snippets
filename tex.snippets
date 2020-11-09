@@ -135,7 +135,6 @@ def tikz_amp(snip):
 
 
 endglobal
-
 ##############################################
 
 # Custom Tikz Snippets #
@@ -145,13 +144,6 @@ endglobal
 #############
 #### Math
 #############
-
-
-# Post-fix for if one accidentally hits tab too late coming out of inline math mode
-# context "prose()"
-# snippet '( \$)([[,.\sa-zA-Z])' "Fix extra space prior to ending math mode" rA
-# \$`!p snip.rv = match.group(2)`
-# endsnippet
 
 context "isMath()"
 snippet '`([a-zA-Z])' "auto greek letter" rA
@@ -212,9 +204,19 @@ snippet [[ "display math" bA
 $0
 endsnippet
 
+# context "isMath()"
+# snippet '([\s\d\",._=\$\/\(\)\{\}\[\]\\]|^):' "set condition" r
+# `!p snip.rv = isbackslash(match.group(1))`\\ : \\ $0
+# endsnippet
+
+# context "isMath()"
+# snippet '([a-zA-Z]):' "Colon expand" r
+# `!p snip.rv = match.group(1)` \\colon 
+# endsnippet
+
 context "isMath()"
-snippet '([\s\d\",._=\$\/\(\)\{\}\[\]\\]|^):' "set condition" r
-`!p snip.rv = isbackslash(match.group(1))`\\ : \\ $0
+snippet : "colon"
+\\colon 
 endsnippet
 
 snippet a1 "Description" iA
@@ -349,9 +351,44 @@ snippet dm "Display Math" bwA
 $0
 endsnippet
 
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)du' "disjoint union" r
+`!p snip.rv = isbackslash(match.group(1))`\\amalg
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)DU' "big disjoint union" r
+`!p snip.rv = isbackslash(match.group(1))`\\coprod
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)du_' "disoint union subscript" rA
+`!p snip.rv = isbackslash(match.group(1))`\\amalg_{$1}
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)DU_' "big disjoint union" rA
+`!p snip.rv = isbackslash(match.group(1))`\\coprod_{$1}^{$2}
+endsnippet
+
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)duu' "amalg ... amalg" rA
+`!p snip.rv = isbackslash(match.group(1))`\\amalg \\cdots \\amalg$0
+endsnippet
+
+
+
+
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)es' "Empty set" rA
 `!p snip.rv = isbackslash(match.group(1))`\\emptyset$0
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fa' "forall" r
+`!p snip.rv = isbackslash(match.group(1))`\\forall 
 endsnippet
 
 context "isMath()"
@@ -534,9 +571,16 @@ endsnippet
 
 
 context "isMath()"
-snippet '(?<!\^)([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)op' "oplus" r
+snippet '(?<!\^)([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^|\^\{)op' "oplus" r
 `!p snip.rv = isbackslash(match.group(1))`\\oplus$0
 endsnippet
+
+
+context "isMath()"
+snippet '(?<!\^)([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)OP' "big oplus" r
+`!p snip.rv = isbackslash(match.group(1))`\\bigoplus$0
+endsnippet
+
 
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)op_' "oplus subscript" rA
@@ -544,19 +588,36 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)op_' "oplus subscript" rA
 endsnippet
 
 context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)OP_' "bigoplus subscript" rA
+`!p snip.rv = isbackslash(match.group(1))`\\bigoplus_{$1}^{$2}$0
+endsnippet
+
+
+context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)opp' "oplus plus.." rA
 `!p snip.rv = isbackslash(match.group(1))`\\oplus \\ldots \\oplus$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ot' "otimes" r
-`!p snip.rv = isbackslash(match.group(1))`\\otimes$0
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^|\^\{)ot' "otimes" r
+`!p snip.rv = isbackslash(match.group(1))`\\otimes
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)OT' "big otimes" r
+`!p snip.rv = isbackslash(match.group(1))`\\bigotimes
 endsnippet
 
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ot_' "otimes subscript" rA
-`!p snip.rv = isbackslash(match.group(1))`\\otimes_{$1}$0
+`!p snip.rv = isbackslash(match.group(1))`\\otimes_{$1}
 endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)OT_' "big otimes subscript" rA
+`!p snip.rv = isbackslash(match.group(1))`\\bigotimes_{$1}^{$2}
+endsnippet
+
 
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ott' "otimes times.." rA
@@ -679,10 +740,19 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)til' "overline tilde environment" 
 `!p snip.rv = isbackslash(match.group(1))`\\widetilde{$1}$0
 endsnippet
 
-
 context "isMath()"
 snippet \\to "&to" iA
 &\\to
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:;\$\/\(\)\|\{\}\[\]\\]|^)u' "underline" r
+`!p snip.rv = isbackslash(match.group(1))`\\und{$1}
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:;\$\/\(\)\|\{\}\[\]\\]|^)und' "underline" r
+`!p snip.rv = isbackslash(match.group(1))`\\und{$1}
 endsnippet
 
 context "isMath()"
@@ -694,6 +764,12 @@ endsnippet
 context "isMath()"
 snippet vmat "Vertical Matrix" i
 \\begin{vmatrix} $1 \\end{vmatrix} $0
+endsnippet
+
+context "prose()"
+snippet vsp "vspace" b
+\\vspace{$1em}
+$0
 endsnippet
 
 context "isMath()"
@@ -739,13 +815,18 @@ snippet Cech "Cech" A
 endsnippet
 
 context "prose()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]]|^)etale' "etale" rA
-`!p snip.rv = match.group(1)`\\'etale
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]]|^)([Ee])tale' "etale" rA
+`!p snip.rv = match.group(1)`\\'`!p snip.rv = match.group(2)`tale
 endsnippet
 
 context "prose()"
 snippet iff "if and only if"
 if and only if
+endsnippet
+
+context "prose()"
+snippet Godel "Godel" A
+G\\"{o}del
 endsnippet
 
 context "prose()"
@@ -759,16 +840,19 @@ Pl\\"{u}cker
 endsnippet
 
 context "prose()"
-snippet ss "spec seq"
-spectral sequence
+snippet '(\`\`|\s|\t)ss' "spec seq" r
+`!p snip.rv = match.group(1)`spectral sequence
 endsnippet
 
 context "prose()"
-snippet vs "vector space"
-vector space
+snippet '(\`\`|\s|\t)vs' "vector space" r
+`!p snip.rv = match.group(1)`vector space
 endsnippet
 
 
-
+context "prose()"
+snippet '~correspond(ing|s)' "corresponding" rbA
+correspond`!p snip.rv = match.group(1)`
+endsnippet
 
 # vim:ft=snippets:

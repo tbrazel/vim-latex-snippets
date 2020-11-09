@@ -119,6 +119,13 @@ $0
 endsnippet
 
 context "prose()"
+snippet disc "discussion" b
+\\begin{discussion}`!p snip.rv='\label{disc:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{discussion}
+$0
+endsnippet
+
+context "prose()"
 snippet enum "Enumerate" bA
 \\begin{enumerate}
 	\\item $1
@@ -281,6 +288,11 @@ snippet '(\\|^)prov' "provide command" r
 endsnippet
 
 context "prose()"
+snippet tc "text command" b
+\\providecommand{\\$1}{\\text{$1}}
+endsnippet
+
+context "prose()"
 snippet '(\\|^)renewc' "renewcommand" r
 `!p snip.rv = isbackslash(match.group(1))`\\renewcommand{$1}{$0}
 endsnippet
@@ -291,6 +303,15 @@ snippet rmk "remark" bA
 \\end{remark}
 $0
 endsnippet
+
+context "prose()"
+snippet slo "slogan" bA
+\\begin{slogan}`!p snip.rv='\label{slo:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{slogan}
+$0
+endsnippet
+
+
 
 snippet tabular "tabular" b
 \\begin{center}

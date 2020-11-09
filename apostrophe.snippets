@@ -1,0 +1,95 @@
+# Leading apostrophe snippets
+priority 10
+global !p
+import re
+
+# Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
+def isbackslash(string):
+    if string == '\\':
+	    return ''
+    return string
+
+# See https://vi.stackexchange.com/a/18494/
+texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
+texMathZones += ['texMathZone'+x for x in ['E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS']]
+texIgnoreMathZones = ['texMathText']
+
+texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
+texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
+
+def isMath():
+    synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
+    if not set(texIgnoreMathZoneIds).isdisjoint(synstackids):
+        return False
+    return not set(texMathZoneIds).isdisjoint(synstackids)
+
+def prose():
+	return not isMath()
+
+endglobal
+##############################################
+
+context "prose()"
+snippet 'b "bold" A
+\\textbf{$1}
+endsnippet
+
+context "isMath()"
+snippet 'b "bold" A
+\\mathbf{$1}
+endsnippet
+
+
+context "isMath()"
+snippet 'c "cdot" A
+\\cdot $0
+endsnippet
+
+context "isMath()"
+snippet 'f "forall" A
+\\forall $0
+endsnippet
+
+context "prose()"
+snippet 'i "italic" A
+\\textit{$1}
+endsnippet
+
+context "isMath"
+snippet 'i "italic" A
+\\mathit{$1}
+endsnippet
+
+context "isMath()"
+snippet 'l "leq" A
+\\le $0
+endsnippet
+
+context "isMath()"
+snippet 'o "overline" A
+\\overline{$1}
+endsnippet
+
+context "isMath()"
+snippet 'p "product in math mode" A
+\\prod
+endsnippet
+
+context "isMath()"
+snippet 's "sum in math mode" A
+\\sum
+endsnippet
+
+context "isMath()"
+snippet 't "text in math mode" A
+\\text{$1}
+endsnippet
+
+context "isMath()"
+snippet 'u "underline" A
+\\underline{$1}
+endsnippet
+
+
+
+# vim:ft=snippets:
