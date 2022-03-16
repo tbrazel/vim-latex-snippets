@@ -283,6 +283,13 @@ $0
 endsnippet
 
 context "prose()"
+snippet que "question" bA
+\\begin{question}`!p snip.rv='\label{que:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{question}
+$0
+endsnippet
+
+context "prose()"
 snippet '(\\|^)prov' "provide command" r
 `!p snip.rv = isbackslash(match.group(1))`\\providecommand{$1}{$0}
 endsnippet

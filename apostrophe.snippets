@@ -30,13 +30,13 @@ endglobal
 ##############################################
 
 context "prose()"
-snippet 'b "bold" A
+snippet 'b "bold" iA
 \\textbf{$1}
 endsnippet
 
 context "isMath()"
-snippet 'b "bold" A
-\\mathbf{$1}
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)'b' "bold" irA
+`!p snip.rv = isbackslash(match.group(1))`\\mathbf{$1}
 endsnippet
 
 
@@ -50,13 +50,18 @@ snippet 'f "forall" A
 \\forall $0
 endsnippet
 
+context "isMath()"
+snippet 'h "hat" iA
+\\hat{$1}
+endsnippet
+
 context "prose()"
-snippet 'i "italic" A
+snippet 'i "italic" iA
 \\textit{$1}
 endsnippet
 
-context "isMath"
-snippet 'i "italic" A
+context "isMath()"
+snippet 'i "italic" iA
 \\mathit{$1}
 endsnippet
 
@@ -76,17 +81,17 @@ snippet 'p "product in math mode" A
 endsnippet
 
 context "isMath()"
-snippet 's "sum in math mode" A
-\\sum
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)'s' "sum in math mode" rA
+`!p snip.rv = isbackslash(match.group(1))`\\sum
 endsnippet
 
 context "isMath()"
-snippet 't "text in math mode" A
+snippet 't "text in math mode" iA
 \\text{$1}
 endsnippet
 
 context "isMath()"
-snippet 'u "underline" A
+snippet 'u "underline" iA
 \\underline{$1}
 endsnippet
 

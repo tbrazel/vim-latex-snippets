@@ -44,19 +44,26 @@ endglobal
 
 global !p
 
-# See https://vi.stackexchange.com/a/18494/
-texMathZones = ['texMathZone'+x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS', 'D', 'DS', 'V', 'W', 'X', 'Y', 'Z']]
-texMathZones += ['texMathZone'+x for x in ['E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS', 'K', 'KS', 'L', 'LS']]
+texMathZones = ['texMathZone' + x for x in ['A', 'AS', 'B', 'BS', 'C', 'CS',
+'D', 'DS', 'E', 'ES', 'F', 'FS', 'G', 'GS', 'H', 'HS', 'I', 'IS', 'J', 'JS',
+'K', 'KS', 'L', 'LS', 'DS', 'V', 'W', 'X', 'Y', 'Z', 'AmsA', 'AmsB', 'AmsC',
+'AmsD', 'AmsE', 'AmsF', 'AmsG', 'AmsAS', 'AmsBS', 'AmsCS', 'AmsDS', 'AmsES',
+'AmsFS', 'AmsGS', 'TB' ]]
+
 texIgnoreMathZones = ['texMathText']
 
 texMathZoneIds = vim.eval('map('+str(texMathZones)+", 'hlID(v:val)')")
 texIgnoreMathZoneIds = vim.eval('map('+str(texIgnoreMathZones)+", 'hlID(v:val)')")
 
+ignore = texIgnoreMathZoneIds[0]
+
 def isMath():
-    synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
-    if not set(texIgnoreMathZoneIds).isdisjoint(synstackids):
-        return False
-    return not set(texMathZoneIds).isdisjoint(synstackids)
+	synstackids = vim.eval("synstack(line('.'), col('.') - (col('.')>=2 ? 1 : 0))")
+	try:
+		first = next(i for i in reversed(synstackids) if i in texIgnoreMathZoneIds or i in texMathZoneIds)
+		return first != ignore
+	except StopIteration:
+		return False
 
 def prose():
 	return not isMath()
@@ -69,9 +76,12 @@ def tikzcd(snip):
 	columns = int(digits[1])
 	snip.buffer[snip.line] = ''
 	row = []
-	for i in range(0,rows):
+	for i in range(0,rows-1):
 		irow = '\t' + ' & '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\\\\\\\\' + '\n'
 		row.append(irow)
+	lastrow = '\t' + ' & '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\n'
+	row.append(lastrow)
+
 	output = '\\[ \\begin{tikzcd}\n' + ''.join(row) + '\\end{tikzcd} \\]\n$0'
 	snip.expand_anon(output)
 
@@ -343,6 +353,10 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)cupp' "cup cdots.." rA
 `!p snip.rv = isbackslash(match.group(1))`\\cup \\cdots \\cup$0
 endsnippet
 
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)dd' "ddots" r
+`!p snip.rv = isbackslash(match.group(1))`\\ddots $0
+endsnippet
 
 snippet dm "Display Math" bwA
 \\[
@@ -350,7 +364,6 @@ snippet dm "Display Math" bwA
 \\]
 $0
 endsnippet
-
 
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)du' "disjoint union" r
@@ -533,8 +546,9 @@ snippet limsup "limsup" w
 \\limsup_{${1:n} \\to ${2:\\infty}}
 endsnippet
 
+
 context "isMath()"
-snippet '([\s\d,.=\-\$\/\(\)\|\{\}\[\]\\]|^)lr' "lrangle" rA
+snippet '([\s\d,.=\-\$\/\(\)\|\{\}\[\]\\]|^)lra' "lrangle" rA
 `!p snip.rv = isbackslash(match.group(1))`\\left\\langle $1 \\right\\rangle$0
 endsnippet
 
@@ -654,6 +668,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]]|^)res' "restriction" rA
 `!p snip.rv =match.group(1)`\\left. $1 \\right|_{ $2 }$0
 endsnippet
 
+
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sb' "subset" r
 `!p snip.rv = isbackslash(match.group(1))`\\subseteq 
@@ -745,10 +760,10 @@ snippet \\to "&to" iA
 &\\to
 endsnippet
 
-context "isMath()"
-snippet '([\s\d\",._=:;\$\/\(\)\|\{\}\[\]\\]|^)u' "underline" r
-`!p snip.rv = isbackslash(match.group(1))`\\und{$1}
-endsnippet
+#context "isMath()"
+#snippet '([\s\d\",._=:;\$\/\(\)\|\{\}\[\]\\]|^)u' "underline" r
+#`!p snip.rv = isbackslash(match.group(1))`\\und{$1}
+#endsnippet
 
 context "isMath()"
 snippet '([\s\d\",._=:;\$\/\(\)\|\{\}\[\]\\]|^)und' "underline" r
@@ -760,6 +775,10 @@ snippet uu "units" iA
 ^\\times
 endsnippet
 
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)vd' "vdots" r
+`!p snip.rv = isbackslash(match.group(1))`\\vdots $0
+endsnippet
 
 context "isMath()"
 snippet vmat "Vertical Matrix" i
@@ -776,6 +795,44 @@ context "isMath()"
 snippet xx "times" iA
 \\times
 endsnippet
+
+
+###
+# Arrows inline
+###
+
+context "isMath()"
+snippet lll "triple left arrows"
+\\lllarrows
+endsnippet
+
+
+context "isMath()"
+snippet lr "leftrightarrows"
+\\leftrightarrows
+endsnippet
+
+context "isMath()"
+snippet rr "rightrightarrows"
+\\rightrightarrows
+endsnippet
+
+context "isMath()"
+snippet rlr "rlr arrows"
+\\rlrarrows
+endsnippet
+
+
+
+context "isMath()"
+snippet rrr "triple right arrows"
+\\rrrarrows
+endsnippet
+
+
+
+
+
 
 ################
 ### Tikzcd and matrices of arbitrary size
@@ -806,6 +863,12 @@ endsnippet
 
 
 
+
+
+
+
+
+
 ############
 # Text Replacement
 ############
@@ -815,13 +878,18 @@ snippet Cech "Cech" A
 endsnippet
 
 context "prose()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]]|^)([Ee])tale' "etale" rA
+snippet '([\s\d\",._=\$\/\(\)\|\{\}\[\]]|^)([Ee])tale' "etale" rA
 `!p snip.rv = match.group(1)`\\'`!p snip.rv = match.group(2)`tale
 endsnippet
 
 context "prose()"
 snippet iff "if and only if"
 if and only if
+endsnippet
+
+context "prose()"
+snippet Bezout "Bezout" A
+B\\'{e}zout
 endsnippet
 
 context "prose()"
