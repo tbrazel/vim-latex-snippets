@@ -76,8 +76,8 @@ snippet 'o "overline" A
 endsnippet
 
 context "isMath()"
-snippet 'p "product in math mode" A
-\\prod
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)'p' "product in math mode" rA
+`!p snip.rv = isbackslash(match.group(1))`\\prod
 endsnippet
 
 context "isMath()"

@@ -409,6 +409,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fr' "fraction" r
 `!p snip.rv = isbackslash(match.group(1))`\\frac{$1}{$2}$0
 endsnippet
 
+context "isMath()"
 snippet '([\t\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fra' "fraction" r
 `!p snip.rv = match.group(1) if match.group(1) is not "\\" else ""`\\frac\{$1}\{$2}$0
 endsnippet
