@@ -1,9 +1,27 @@
 # Basic commands for faster LaTeX in Vim
+
+#
+#
+#
+#
 # These use the UltiSnips package: https://github.com/SirVer/ultisnips
 #
 # Some references:
 #	castel.dev's blog post on TeX + Vim
 #	Hotschke's vim stackexchange post for math-aware ultisnips https://vi.stackexchange.com/a/18494/
+
+
+# Basic regex (to build on):
+
+# In MATH MODE:
+# ([\s\d\"\^,._=\-:&\$\/\(\)\|\{\}\[\]\\]|^)
+#		expands after most things you might expect
+
+# In PROSE
+# ([\s\-+=\,\.`\$\(\)\[\]\{\}\-]|^)
+# ([\s-+=\,\.`\$\(\)\[\]\{\}\-]|^)
+
+############################
 priority 10
 global !p
 import re
@@ -229,15 +247,22 @@ snippet : "colon"
 \\colon 
 endsnippet
 
-snippet a1 "Description" iA
+context "isMath()"
+snippet a1 "a1" iA
 \\A^1
 endsnippet
+
+context "prose()"
+snippet a1 "a1" iA
+\$\\A^1\$
+endsnippet
+
 
 # Regex Explanation:
 #	Match an asterisk not preceded by an underscore _ or the word "align"
 #	This avoids issues where you accidentally delete the asterisk in "align*" and can't retype it since you are in math mode
 context "isMath()"
-snippet '(?<![\_{\s$,\(\[\{])(?<!align)\*' "superscript asterisk" rA
+snippet '(?<![\_\-\s$,\(\[\{])(?<!align)\*' "superscript asterisk" rA
 ^\\ast
 endsnippet
 
@@ -294,7 +319,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bcup' "Big cup environment" r
 endsnippet
 
 context "prose()"
-snippet '([\s\,\.`\$\(\)\[\]\{\}\-]|^)bf' "bold" riw
+snippet '([\s\-+=\,\.`\$\(\)\[\]\{\}\-]|^)bf' "bold" riw
 `!p snip.rv = match.group(1)`\\textbf{$1}$0
 endsnippet
 
@@ -415,12 +440,12 @@ snippet '([\t\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fra' "fraction" r
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fk' "math frak" r
+snippet '([\s\d\",._=\-:\$\/\(\)\|\{\}\[\]\\]|^)fk' "math frak" r
 `!p snip.rv = isbackslash(match.group(1))`\\mathfrak{${1:C}}$0
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)fk([a-zA-Z])' "math frak automatic" rA
+snippet '([\s\d\",._=\-:\$\/\(\)\|\{\}\[\]\\]|^)fk([a-zA-Z])' "math frak automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathfrak{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
@@ -475,6 +500,12 @@ context "isMath()"
 snippet '`1' "infinity" rA
 \\infty
 endsnippet
+
+context "prose()"
+snippet '`1' "infinity" rA
+\$\\infty\$
+endsnippet
+
 
 context "isMath()"
 snippet invs "inverse" iA
@@ -681,7 +712,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sbn' "subsetneq" r
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sc' "math script" r
+snippet '([\s\d\"\^,._=:\$\/\(\)\|\{\}\[\]\\]|^)sc' "math script" r
 `!p snip.rv = isbackslash(match.group(1))`\\mathscr{${1:C}}$0
 endsnippet
 
@@ -736,7 +767,7 @@ $1^\\times / \\left( $1^\\times \\right)^2
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sto' "isomorphic arrow" rA
+snippet '([\s\d\",._=\-:&\$\/\(\)\|\{\}\[\]\\]|^)sto' "isomorphic arrow" rA
 `!p snip.rv = isbackslash(match.group(1))`\\xto{\\sim} 
 endsnippet
 
@@ -809,8 +840,8 @@ endsnippet
 
 
 context "isMath()"
-snippet lr "leftrightarrows"
-\\leftrightarrows
+snippet '([\s\d\",._=\-:&\$\/\(\)\|\{\}\[\]\\]|^)lr' "leftrightarrows" r
+`!p snip.rv = isbackslash(match.group(1))`\\leftrightarrows
 endsnippet
 
 context "isMath()"
@@ -904,8 +935,8 @@ K\\"{a}hler
 endsnippet
 
 context "prose()"
-snippet Plucker "Plucker" A
-Pl\\"{u}cker
+snippet '([\s\-+=\,\.`\$\(\)\[\]\{\}\-]|^)Plucker' "Plucker" rA
+`!p snip.rv = match.group(1)`Pl\\"{u}cker
 endsnippet
 
 context "prose()"
@@ -925,3 +956,4 @@ correspond`!p snip.rv = match.group(1)`
 endsnippet
 
 # vim:ft=snippets:
+
