@@ -1,6 +1,5 @@
 # This file contains snippets for typesetting LaTeX
 #
-priority 10
 
 global !p
 
@@ -53,6 +52,13 @@ snippet all "align2" b
 	$1 & \\to $2 \\\\
 	$3 & \\mapsto $4
 \\end{align*}
+$0
+endsnippet
+
+context "prose()"
+snippet ans "answer" bA
+\\begin{answer}`!p snip.rv='\label{ans:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{answer}
 $0
 endsnippet
 
@@ -294,6 +300,22 @@ snippet que "question" bA
 \\end{question}
 $0
 endsnippet
+
+context "prose()"
+snippet rcheck "reality check" bA
+\\begin{realitycheck}`!p snip.rv='\label{que:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{realitycheck}
+$0
+endsnippet
+
+context "prose()"
+snippet strat "strategy" bA
+\\begin{strategy}`!p snip.rv='\label{strat:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
+\\end{strategy}
+$0
+endsnippet
+
+
 
 context "prose()"
 snippet '(\\|^)prov' "provide command" r

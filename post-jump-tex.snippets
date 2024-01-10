@@ -126,7 +126,7 @@ def tikz_amp(snip):
 
 	row = []
 	for i in range(0,rows):
-		irow = '\t' + ' & '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\\\\\\\\' + '\n'
+		irow = '\t' + ' \\& '.join(['$' + str(i*columns+j+1) for j in range(columns)]) + '\\\\\\\\' + '\n'
 		row.append(irow)
 
 	output = '\\\\begin{tikzcd}[ampersand replacement = \\\\&]\n' + ''.join(row) + '\\end{tikzcd}\n$0'
