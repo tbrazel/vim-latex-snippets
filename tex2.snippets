@@ -298,7 +298,7 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bb([A-Z])' "math blackboard automa
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bbm([\d])' "math blackboard automatic" rA
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bb([\d])' "math blackboard automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathbbm{`!p snip.rv = match.group(2)`}$0
 endsnippet
 

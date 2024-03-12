@@ -60,8 +60,8 @@ snippet 'l "leq" A
 endsnippet
 
 context "isMath()"
-snippet 'o "overline" A
-\\overline{$1}
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)'o' "overline" rA
+`!p snip.rv = isbackslash(match.group(1))`\\overline{$1}
 endsnippet
 
 context "isMath()"
