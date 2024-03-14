@@ -206,6 +206,16 @@ snippet ii "item" bA
 \\item $0
 endsnippet
 
+context "isMath()"
+snippet ^^ "superscript with brackets" iA
+^{$1}
+endsnippet
+
+context "isMath()"
+snippet __ "subscript with brackets" iA
+_{$1}
+endsnippet
+
 context "prose()"
 snippet [[ "display math" bA
 \\begin{align*}
@@ -253,10 +263,10 @@ endsnippet
 
 
 # Regex Explanation:
-#	Match an asterisk not preceded by an underscore _ or the word "align"
+#	Match an asterisk not preceded by an underscore _ or the word "align" or another asterisk
 #	This avoids issues where you accidentally delete the asterisk in "align*" and can't retype it since you are in math mode
 context "isMath()"
-snippet '(?<![\_\-\s$,\(\[\{])(?<!align)\*' "superscript asterisk" rA
+snippet '(?<![\_\-\s$,\(\[\{])(?<!align)(?<!\\ast)\*' "superscript asterisk" rA
 ^\\ast
 endsnippet
 
@@ -268,6 +278,13 @@ endsnippet
 context "isMath()"
 snippet '([{\s$,\(\[\{])\*' "regular asterisk in math" rA
 `!p snip.rv =match.group(1)`\\ast
+endsnippet
+
+# After one asterisk is expanded, another turns it into a bullet.
+# This allows you to write ** for a bullet
+context "isMath()"
+snippet '(\\ast)\*' "bullet" riA
+\\bullet
 endsnippet
 
 context "isMath()"
@@ -735,7 +752,7 @@ endsnippet
 
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sm' "smashprod" r
-`!p snip.rv = isbackslash(match.group(1))`\\smashprod
+`!p snip.rv = isbackslash(match.group(1))`\\smashprod $0
 endsnippet
 
 context "prose()"
