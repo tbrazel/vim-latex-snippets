@@ -249,6 +249,15 @@ snippet a1 "a1" iA
 \$\\A^1\$
 endsnippet
 
+context "isMath()"
+snippet gm "Gm" iA
+\\mathbb{G}_m
+endsnippet
+
+context "prose()"
+snippet s1 "" iA
+\$S^1\$
+endsnippet
 
 context "isMath()"
 snippet p1 "p1" iA
@@ -259,8 +268,6 @@ context "prose()"
 snippet p1 "p1" iA
 \$\\P^1\$
 endsnippet
-
-
 
 # Regex Explanation:
 #	Match an asterisk not preceded by an underscore _ or the word "align" or another asterisk
@@ -394,13 +401,6 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)dd' "ddots" r
 `!p snip.rv = isbackslash(match.group(1))`\\ddots $0
 endsnippet
 
-snippet dm "Display Math" bwA
-\\[
-	$1
-\\]
-$0
-endsnippet
-
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)du' "disjoint union" r
 `!p snip.rv = isbackslash(match.group(1))`\\amalg
@@ -465,7 +465,8 @@ snippet floor "floor" i
 \\left\\lfloor $1 \\right\\rfloor$0
 endsnippet
 
-snippet fnote "footnote" i
+context "prose()"
+snippet fn "footnote" i
 \\footnote{$1}$0
 endsnippet
 
@@ -560,9 +561,15 @@ snippet l; "left brace" iA
 endsnippet
 
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)lp' "left par" rA
+snippet lp "left parentheses" iA
+($1)
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)LP' "left parentheses (auto delimited)" rAi
 `!p snip.rv = isbackslash(match.group(1))`\\left( $1 \\right)
 endsnippet
+
 
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)ld' "ldots" r
@@ -754,6 +761,12 @@ context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)sm' "smashprod" r
 `!p snip.rv = isbackslash(match.group(1))`\\smashprod $0
 endsnippet
+
+context "prose()"
+snippet sm "symmetric monoidal"
+symmetric monoidal
+endsnippet
+
 
 context "prose()"
 snippet subsec "subsection" bA
