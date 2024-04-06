@@ -97,8 +97,9 @@ endsnippet
 # For other environments
 context "prose()"
 snippet beg "begin{} / end{}" bA
-\\begin{$1} $0
+\\begin{$1} $2
 \\end{$1}
+$0
 endsnippet
 
 context "prose()"
@@ -109,9 +110,19 @@ snippet center "centering"
 $0
 endsnippet
 
+
+context "prose()"
+snippet enum "enumerate" bA
+\\begin{enumerate}
+	\\item $1
+\\end{enumerate}
+$0
+endsnippet
+
+
 context "prose()"
 snippet eqn "equation" bA
-\\begin{equation}\\label{eqn:$1}
+\\begin{equation}`!p snip.rv = "\\label{eqn:" if t[1] else ""`${1:label}`!p snip.rv = "}" if t[1] else ""`
 \\begin{aligned}
     $2
 \\end{aligned}
@@ -123,9 +134,7 @@ context "prose()"
 snippet fig "include figure" b
 \\begin{figure}[h]
   \\includegraphics[width=\\linewidth]{${1:Filename}}
-  \\centering
-  \\caption{${2:Caption}}
-  \\label{fig:${3:Label Name}}
+  \\centering`!p snip.rv="\n  \\caption{" if t[2] else ""`${2:Caption}`!p snip.rv="}" if t[2] else ""``!p snip.rv="\n  \\label{fig:" if t[3] else ""`${3:label name}`!p snip.rv="}" if t[3] else ""`
 \\end{figure}
 $0
 endsnippet
