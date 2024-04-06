@@ -23,7 +23,6 @@ envs = {
 'conj':'conjecture',
 'cor':'corollary',
 'cex':'counterexample',
-'cexs':'counterexamples',
 'code':'codeblock',
 'data':'data',
 'dig':'digression',
@@ -45,9 +44,12 @@ envs = {
 'warn':'warn',
 }
 
+
+
 # Short name regex:
-# (ans|assump|cla|conj|cor|cex|cexs|code|data|dig|disc|def|ex|exs|fac|intu|lem|meta|nota|note|prop|rmk|term|thm|upsh|warn)
+# (ans|assump|cla|conj|cor|cex|code|data|dig|disc|def|ex|exs|fac|intu|lem|meta|nota|note|prop|rmk|term|thm|upsh|warn)
 # Long name regex:
+# (answer|assumption|claim|conjecture|corollary|counterexample|codeblock|data|digression|discussion|definition|example|examples|fact|intuition|lemma|metathm|notation|note|proposition|remark|terminology|theorem|upshot|warning)
 
 
 def longname(string):
@@ -58,61 +60,46 @@ def longname(string):
 		return 'ERR'
 
 
+# Flip the keys and values for the envs dictionary
+flippedenvs = dict((v,k) for k,v in envs.items())
+
+
+def shortname(string):
+	if string in flippedenvs:
+		return flippedenvs[string]
+	
+	else:
+		return 'ERR'
+
+
+
+
+
 endglobal
 
-#################
-#### Environments
-#################
+###################################
+# Theorem environments
 
-
+# Env at start of a new line
 context "prose()"
-snippet '(ans|assump|cla|conj|cor|cex|cexs|code|data|dig|disc|def|ex|exs|fac|intu|lem|meta|nota|note|prop|rmk|term|thm|upsh|warn)' "env" brA
+snippet '(ans|assump|cla|conj|cor|cex|code|data|dig|disc|def|ex|exs|fac|intu|lem|meta|nota|note|prop|rmk|term|thm|upsh|warn)' "env" brA
 \\begin{`!p snip.rv = longname(match.group(1))`} $1
 \\end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
+# Match beginning of env with optional space right after
+# Usage: typing something like 'cor' at the beginning of a new line will automatically expand the snippet above. The idea is that, before typing anything new, you can hit tab again and it will create a label for the theorem environment, with the short name of the theorem prepended, so that the label will be accessible to autoref/cleveref
+snippet '\\begin{(answer|assumption|claim|conjecture|corollary|counterexample|codeblock|data|digression|discussion|definition|example|examples|fact|intuition|lemma|metathm|notation|note|proposition|remark|terminology|theorem|upshot|warning)}( |)' "label" br
+\\begin{`!p snip.rv = match.group(1)`}\\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
 
-#context "prose()"
-#snippet beg "begin{} / end{}" bA
-#\\begin{$1} $0
-#\\end{$1}
-#endsnippet
-
-#context "prose()"
-#snippet al "align" b
-#\\begin{align*}
-#	$1
-#\\end{align*}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet all "align2" b
-#\\begin{align*}
-#	$1 & \\to $2 \\\\
-#	$3 & \\mapsto $4
-#\\end{align*}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet ans "answer" bA
-#\\begin{answer}`!p snip.rv='\label{ans:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{answer}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet array "array"
-#\\begin{array}{$1} $2 \\end{array} $0
-#endsnippet
-
-#context "prose()"
-#snippet bib "bibliography"
-#\bibliographystyle{amsalpha}
-#\bibliography{$1.bib}{}
-#endsnippet
+# For other environments
+context "prose()"
+snippet beg "begin{} / end{}" bA
+\\begin{$1} $0
+\\end{$1}
+endsnippet
 
 context "prose()"
 snippet center "centering"
@@ -121,85 +108,6 @@ snippet center "centering"
 \\end{center}
 $0
 endsnippet
-
-#context "prose()"
-#snippet cex "counterexample"
-#\\begin{counterexample}`!p snip.rv='\label{cex:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{counterexample}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet claim "claim" bA
-#\\begin{claim}`!p snip.rv='\label{cla:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{claim}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet code "code block" b
-#\\begin{codeblock} $1
-#\\end{codeblock}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet conj "conjecture" bA
-#\\begin{conjecture} $1
-#\\end{conjecture}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet cor "corollary" bA
-#\\begin{corollary}`!p snip.rv='\\label{cor:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{corollary}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet cust "customenv" bA
-#\\begin{customenvironment}{$1} $2
-#\\end{customenvironment}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet def "definition" bA
-#\\begin{definition}`!p snip.rv='\label{def:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{definition}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet dig "digression" bA
-#\\begin{digression}`!p snip.rv='\label{dig:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{digression}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet disc "discussion" b
-#\\begin{discussion}`!p snip.rv='\label{disc:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{discussion}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet enum "Enumerate" bA
-#\\begin{enumerate}
-#	\\item $1
-#\\end{enumerate}
-#$0
-#endsnippet
-
-## Custom enumerate environment, uses enumitem package with shortlabel options
-#snippet 'enu([aAiI1])' "enumerate with enumitem shortlabel" rbA
-#\\begin{enumerate}[(`!p snip.rv = match.group(1)`)]
-#	\\item $1
-#\\end{enumerate}
-#$0
-#endsnippet
 
 context "prose()"
 snippet eqn "equation" bA
@@ -210,41 +118,6 @@ snippet eqn "equation" bA
 \\end{equation}
 $0
 endsnippet
-
-#context "prose()"
-#snippet example "example" bA
-#\\begin{example}`!p snip.rv='\label{ex:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{example}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet exa "example1" bA
-#\\begin{example}`!p snip.rv='\label{ex:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{example}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet exer "exercise" bA
-#\\begin{exercise}`!p snip.rv='\label{exer:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{exercise}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet exs "examples" bA
-#\\begin{examples}`!p snip.rv='\label{exs:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{examples}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet fact "fact" bA
-#\\begin{fact}`!p snip.rv='\label{fac:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{fact}
-#$0
-#endsnippet
 
 context "prose()"
 snippet fig "include figure" b
@@ -258,7 +131,7 @@ $0
 endsnippet
 
 context "prose()"
-snippet ink "inkscape figure"
+snippet ink "inkscape figure" b
 \\begin{figure}[ht]
     \\centering
     \\incfig{$1}
@@ -266,26 +139,6 @@ snippet ink "inkscape figure"
     \\label{fig:$3}
 \\end{figure}
 endsnippet
-
-#context "prose()"
-#snippet intu "intuition" bA
-#\\begin{intuition}`!p snip.rv='\label{int:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{intuition}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet item "Individual item" bA
-#\\item $0
-#endsnippet
-
-#context "prose()"
-#snippet itemi "Itemize2" bA
-#\\begin{itemize}
-#	\\item $1
-#\\end{itemize}
-#$0
-#endsnippet
 
 context "prose()"
 snippet iz "Itemize" bA
@@ -295,106 +148,12 @@ snippet iz "Itemize" bA
 $0
 endsnippet
 
-#context "prose()"
-#snippet lem "lemma" bA
-#\\begin{lemma}`!p snip.rv='\label{lem:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{lemma}
-#$0
-#endsnippet
-
-context "prose()"
-snippet '(\\|^)newc' "new command" r
-`!p snip.rv = isbackslash(match.group(1))`\\newcommand{$1}{$0}
-endsnippet
-
-#context "prose()"
-#snippet notation "notation" bA
-#\\begin{notation}`!p snip.rv='\label{nota:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{notation}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet note "note" bA
-#\\begin{note}`!p snip.rv='\label{note:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{note}
-#$0
-#endsnippet
-
 context "prose()"
 snippet pf "proof" bA
 \\begin{proof} $1
 \\end{proof}
 $0
 endsnippet
-
-##context "prose()"
-##snippet pfthm "Proof of Theorem" bA
-##\\begin{proof}[Proof of Theorem~\\ref{thm:$1}] $0
-##\\end{proof}
-##$0
-##endsnippet
-
-#context "prose()"
-#snippet prop "proposition" bA
-#\\begin{proposition}`!p snip.rv='\label{prop:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{proposition}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet que "question" bA
-#\\begin{question}`!p snip.rv='\label{que:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{question}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet rcheck "reality check" bA
-#\\begin{realitycheck}`!p snip.rv='\label{que:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{realitycheck}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet strat "strategy" bA
-#\\begin{strategy}`!p snip.rv='\label{strat:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{strategy}
-#$0
-#endsnippet
-
-
-
-context "prose()"
-snippet '(\\|^)prov' "provide command" r
-`!p snip.rv = isbackslash(match.group(1))`\\providecommand{$1}{$0}
-endsnippet
-
-context "prose()"
-snippet tc "text command" b
-\\providecommand{\\$1}{\\text{$1}}
-endsnippet
-
-context "prose()"
-snippet '(\\|^)renewc' "renewcommand" r
-`!p snip.rv = isbackslash(match.group(1))`\\renewcommand{$1}{$0}
-endsnippet
-
-#context "prose()"
-#snippet rmk "remark" bA
-#\\begin{remark}`!p snip.rv='\label{rmk:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{remark}
-#$0
-#endsnippet
-
-#context "prose()"
-#snippet slo "slogan" bA
-#\\begin{slogan}`!p snip.rv='\label{slo:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{slogan}
-#$0
-#endsnippet
-
-
 
 snippet tabular "tabular" b
 \\begin{center}
@@ -404,26 +163,29 @@ snippet tabular "tabular" b
 \\end{center}
 endsnippet
 
-#context "prose()"
-#snippet termino "terminology" bA
-#\\begin{terminology}`!p snip.rv='\label{term:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{terminology}
-#$0
-#endsnippet
+###################################
 
-#context "prose()"
-#snippet thm "theorem" bA
-#\\begin{theorem}`!p snip.rv='\label{thm:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{theorem}
-#$0
-#endsnippet
+# Preamble commands
 
-#context "prose()"
-#snippet upsh "upshot" bA
-#\\begin{upshot}`!p snip.rv='\label{upsh:' if t[2] else ""`${2:labelname}`!p snip.rv = '}' if t[2] else ""` $1
-#\\end{upshot}
-#$0
-#endsnippet
+context "prose()"
+snippet '(\\|^)newc' "new command" r
+`!p snip.rv = isbackslash(match.group(1))`\\newcommand{$1}{$0}
+endsnippet
+
+context "prose()"
+snippet '(\\|^)prov' "provide command" r
+`!p snip.rv = isbackslash(match.group(1))`\\providecommand{$1}{$0}
+endsnippet
+
+context "prose()"
+snippet '(\\|^)renewc' "renewcommand" r
+`!p snip.rv = isbackslash(match.group(1))`\\renewcommand{$1}{$0}
+endsnippet
+
+context "prose()"
+snippet tc "text command" b
+\\providecommand{\\$1}{\\text{$1}}
+endsnippet
 
 snippet '(\\|^)usep' "Package" br
 `!p snip.rv = isbackslash(match.group(1))`\\usepackage`!p snip.rv='[' if t[1] else ""`${1:options}`!p snip.rv = ']' if t[1] else ""`{${2:package}}$0
@@ -432,11 +194,8 @@ endsnippet
 
 
 
-
-
-###
-# Beamer
-###
+###################################
+# Beamer commands
 
 snippet frame "Frame beamer" b
 \\begin{frame}{$1}

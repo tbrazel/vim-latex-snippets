@@ -1,0 +1,74 @@
+# Basic regex (to build on):
+
+# In MATH MODE:
+# ([\s\d\"\^,._=\-:&\$\/\(\)\|\{\}\[\]\\]|^)
+#		expands after most things you might expect
+
+# In PROSE
+# ([\s\-+=\,\.`\$\(\)\[\]\{\}\-]|^)
+# ([\s-+=\,\.`\$\(\)\[\]\{\}\-]|^)
+
+############################
+priority 10
+global !p
+import re
+
+# Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
+def isbackslash(string):
+    if string == '\\':
+	    return ''
+    return string
+
+
+endglobal
+##############################################
+
+# context "isMath()"
+# snippet '([\s\d\",._=\$\/\(\)\{\}\[\]\\]|^):' "set condition" r
+# `!p snip.rv = isbackslash(match.group(1))`\\ : \\ $0
+# endsnippet
+
+# context "isMath()"
+# snippet '([a-zA-Z]):' "Colon expand" r
+# `!p snip.rv = match.group(1)` \\colon 
+# endsnippet
+
+#context "isMath()"
+#snippet '([\s\d\",._=:;\$\/\(\)\|\{\}\[\]\\]|^)u' "underline" r
+#`!p snip.rv = isbackslash(match.group(1))`\\und{$1}
+#endsnippet
+
+##############################################
+
+# Old env snippets that might still be good to start using
+
+
+#context "prose()"
+#snippet all "align2" b
+#\\begin{align*}
+#	$1 & \\to $2 \\\\
+#	$3 & \\mapsto $4
+#\\end{align*}
+#$0
+#endsnippet
+
+#context "prose()"
+#snippet bib "bibliography"
+#\bibliographystyle{amsalpha}
+#\bibliography{$1.bib}{}
+#endsnippet
+
+## Custom enumerate environment, uses enumitem package with shortlabel options
+#snippet 'enu([aAiI1])' "enumerate with enumitem shortlabel" rbA
+#\\begin{enumerate}[(`!p snip.rv = match.group(1)`)]
+#	\\item $1
+#\\end{enumerate}
+#$0
+#endsnippet
+
+
+
+
+
+
+# vim:ft=snippets:
