@@ -273,10 +273,17 @@ endsnippet
 #	Match an asterisk not preceded by an underscore _ or the word "align" or another asterisk
 #	This avoids issues where you accidentally delete the asterisk in "align*" and can't retype it since you are in math mode
 context "isMath()"
-snippet '(?<![\_\-\s$,\(\[\{])(?<!align)(?<!\\ast)\*' "superscript asterisk" rA
+snippet '(?<![\_\-\s$,\^\(\[\{])(?<!align)(?<!\\ast)\*' "superscript asterisk" rA
 ^\\ast
 endsnippet
 
+# Expand asterisk after carrot ^*
+context "isMath()"
+snippet '\^\*' "asterisk" rA
+^\\ast
+endsnippet
+
+# Subscript asterisk
 context "isMath()"
 snippet '(_\*)' "subscript asterisk" rA
 _\\ast
