@@ -235,9 +235,15 @@ endsnippet
 # endsnippet
 
 context "isMath()"
-snippet : "colon"
+snippet ': "noloc" i
+\\noloc 
+endsnippet
+
+context "isMath()"
+snippet : "colon" i
 \\colon 
 endsnippet
+
 
 context "isMath()"
 snippet a1 "a1" iA
@@ -290,7 +296,7 @@ _\\ast
 endsnippet
 
 context "isMath()"
-snippet '([{\s$,\(\[\{])\*' "regular asterisk in math" rA
+snippet '([{\s$,\+\(\[\{])\*' "regular asterisk in math" rA
 `!p snip.rv =match.group(1)`\\ast
 endsnippet
 
@@ -300,6 +306,13 @@ context "isMath()"
 snippet '(\\ast)\*' "bullet" riA
 \\bullet
 endsnippet
+
+# Swap it out with a double grading convention, e.g. for motivic stuff
+# context "isMath()"
+# snippet '(\\ast)\*' "bullet" riA
+# \{\\ast,\\ast\}
+# endsnippet
+
 
 context "isMath()"
 snippet >> ">>" iA
@@ -322,9 +335,8 @@ snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bar' "overline bar environment" r
 endsnippet
 
 
-
 context "isMath()"
-snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)bb([A-Z])' "math blackboard automatic" rA
+snippet '([\s\d\",._=:\^\$\/\(\)\|\{\}\[\]\\]|^)bb([A-Z])' "math blackboard automatic" rA
 `!p snip.rv = isbackslash(match.group(1))`\\mathbb{`!p snip.rv = match.group(2)`}$0
 endsnippet
 
@@ -406,6 +418,11 @@ endsnippet
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)dd' "ddots" r
 `!p snip.rv = isbackslash(match.group(1))`\\ddots $0
+endsnippet
+
+context "isMath()"
+snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)DD' "blackboard delta" r
+`!p snip.rv = isbackslash(match.group(1))`\\DDelta$0
 endsnippet
 
 context "isMath()"
@@ -544,6 +561,11 @@ snippet '([\s\,\.\$\(\)\{\}\[\]\-]|^)it' "italic" r
 `!p snip.rv = match.group(1)`\\mathit{$1}$0
 endsnippet
 # TODO double check this is correct for LaTeX
+
+context "isMath()"
+snippet "([\s\d\",._=:\$\/\(\)\|\{\}\[\]]|^)l" "ell" r
+`!p snip.rv = match.group(1)`\\ell
+endsnippet
 
 context "isMath()"
 snippet '([\s\d\",._=:\$\/\(\)\|\{\}\[\]\\]|^)l\(' "left parentheses" riA
@@ -973,6 +995,12 @@ snippet Godel "Godel" A
 G\\"{o}del
 endsnippet
 
+
+context "prose()"
+snippet Grobner "Grobner" A
+Gr\\"{o}bner
+endsnippet
+
 context "prose()"
 snippet Kahler "Kahler" A
 K\\"{a}hler
@@ -986,6 +1014,11 @@ endsnippet
 context "prose()"
 snippet Kunneth "Kunneth" A
 K\\"{u}nneth
+endsnippet
+
+context "prose()"
+snippet Mobius "Mobius" A
+M\\"{o}bius
 endsnippet
 
 context "prose()"
