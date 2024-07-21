@@ -1,0 +1,47 @@
+global !p
+
+def isMath():
+    return int(vim.eval('vimtex#syntax#in_mathzone()')) > 0
+
+def prose():
+	return not isMath()
+
+# Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
+def isbackslash(string):
+    if string == '\\':
+	    return ''
+    return string
+
+endglobal
+
+####################################################
+context "prose()"
+snippet '(\\|^)dec' "declare operator" rbA
+`!p snip.rv = isbackslash(match.group(1))`\\DeclareMathOperator{\\$1}{$1}
+endsnippet
+
+context "prose()"
+snippet '(\\|^)newc' "new command" r
+`!p snip.rv = isbackslash(match.group(1))`\\newcommand{$1}{$2}
+endsnippet
+
+context "prose()"
+snippet '(\\|^)prov' "provide command" r
+`!p snip.rv = isbackslash(match.group(1))`\\providecommand{$1}{$2}
+endsnippet
+
+context "prose()"
+snippet '(\\|^)renewc' "renewcommand" r
+`!p snip.rv = isbackslash(match.group(1))`\\renewcommand{$1}{$2}
+endsnippet
+
+context "prose()"
+snippet tc "text command" b
+\\providecommand{\\$1}{\\mathrm{$1}}
+endsnippet
+
+snippet '(\\|^)usep' "Package" br
+`!p snip.rv = isbackslash(match.group(1))`\\usepackage`!p snip.rv='[' if t[1] else ""`${1:options}`!p snip.rv = ']' if t[1] else ""`{${2:package}}$0
+endsnippet
+
+# vim:ft=snippets:
