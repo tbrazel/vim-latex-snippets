@@ -22,12 +22,14 @@ envs = {
 'cor':'corollary',
 'cex':'counterexample',
 'code':'codeblock',
+'comp':'computation',
 'data':'data',
 'dig':'digression',
 'disc':'discussion',
 'def':'definition',
-'ex':'example',
+'exa':'example',
 'exs':'examples',
+'exer':'exercise',
 'fac':'fact',
 'intu':'intuition',
 'lem':'lemma',
@@ -71,7 +73,14 @@ endglobal
 
 # Env at start of a new line
 context "prose()"
-snippet '(ans|assump|cla|conj|cor|cex|code|data|dig|disc|def|ex|exs|fac|intu|lem|meta|nota|note|prop|ques|rmk|term|thm|upsh|warn)' "env" brA
+snippet '(ans|assump|cla|comp|conj|cor|cex|code|data|dig|disc|def|exa|exs|exer)' "env" brA
+\\begin{`!p snip.rv = longname(match.group(1))`} $1
+\\end{`!p snip.rv = longname(match.group(1))`}
+$0
+endsnippet
+
+context "prose()"
+snippet '(fac|intu|lem|meta|nota|note|prop|ques|rmk|term|thm|upsh|warn)' "env" brA
 \\begin{`!p snip.rv = longname(match.group(1))`} $1
 \\end{`!p snip.rv = longname(match.group(1))`}
 $0
@@ -79,9 +88,14 @@ endsnippet
 
 # Match beginning of env with optional space right after
 # Usage: typing something like 'cor' at the beginning of a new line will automatically expand the snippet above. The idea is that, before typing anything new, you can hit tab again and it will create a label for the theorem environment, with the short name of the theorem prepended, so that the label will be accessible to autoref/cleveref
-snippet '\\begin{(answer|assumption|claim|conjecture|corollary|counterexample|codeblock|data|digression|discussion|definition|example|examples|fact|intuition|lemma|metathm|notation|note|proposition|question|remark|terminology|theorem|upshot|warning)}( |)' "label" br
+snippet '\\begin{(answer|assumption|claim|computation|conjecture|corollary|counterexample|codeblock|data|digression|discussion|definition|example)}( |)' "label" br
 \\begin{`!p snip.rv = match.group(1)`}\\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
+
+snippet '\\begin{(examples|exercise|fact|intuition|lemma|metathm|notation|note|proposition|question|remark|terminology|theorem|upshot|warning)}( |)' "label" br
+\\begin{`!p snip.rv = match.group(1)`}\\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
+
 
 context "prose()"
 snippet abs "abstract" bA
@@ -171,6 +185,14 @@ endsnippet
 ###################################
 
 # Preamble commands
+
+
+context "prose()"
+snippet '(\\|^)dec' "declare operator" rbA
+`!p snip.rv = isbackslash(match.group(1))`\\DeclareMathOperator{\\$1}{$1}
+endsnippet
+
+
 
 context "prose()"
 snippet '(\\|^)newc' "new command" r
