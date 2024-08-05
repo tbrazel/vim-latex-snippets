@@ -1,4 +1,7 @@
-# This file contains snippets for typesetting LaTeX
+
+# tex-environments.snippets
+# Built by tbrazel/latex-templates
+
 global !p
 
 # Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
@@ -12,8 +15,6 @@ def isMath():
 
 def prose():
 	return not isMath()
-
-# envs
 envs = {
 'ans':'answer',
 'assump':'assumption',
@@ -22,7 +23,6 @@ envs = {
 'cor':'corollary',
 'cex':'counterexample',
 'code':'codeblock',
-'comp':'computation',
 'data':'data',
 'dig':'digression',
 'disc':'discussion',
@@ -31,24 +31,21 @@ envs = {
 'exs':'examples',
 'exer':'exercise',
 'fac':'fact',
+'goal':'goal',
 'intu':'intuition',
 'lem':'lemma',
 'meta':'metathm',
 'nota':'notation',
 'note':'note',
+'obs':'observation',
 'prop':'proposition',
 'ques':'question',
 'rmk':'remark',
 'term':'terminology',
 'thm':'theorem',
 'upsh':'upshot',
-'warn':'warn',
+'warn':'warning',
 }
-
-# Short name regex:
-# (ans|assump|cla|conj|cor|cex|code|data|dig|disc|def|ex|exs|fac|intu|lem|meta|nota|note|prop|rmk|term|thm|upsh|warn)
-# Long name regex:
-# (answer|assumption|claim|conjecture|corollary|counterexample|codeblock|data|digression|discussion|definition|example|examples|fact|intuition|lemma|metathm|notation|note|proposition|remark|terminology|theorem|upshot|warning)
 
 def longname(string):
 	if string in envs:
@@ -67,35 +64,67 @@ def shortname(string):
 		return 'ERR'
 
 endglobal
+###############
 
-###################################
-# Theorem environments
-
-# Env at start of a new line
 context "prose()"
-snippet '(ans|assump|cla|comp|conj|cor|cex|code|data|dig|disc|def|exa|exs|exer)' "env" brA
-\\begin{`!p snip.rv = longname(match.group(1))`} $1
-\\end{`!p snip.rv = longname(match.group(1))`}
+snippet '(ans|assump|cla|conj|cor|cex|code)' "env" brA
+\begin{`!p snip.rv = longname(match.group(1))`} $1
+\end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '(fac|intu|lem|meta|nota|note|prop|ques|rmk|term|thm|upsh|warn)' "env" brA
-\\begin{`!p snip.rv = longname(match.group(1))`} $1
-\\end{`!p snip.rv = longname(match.group(1))`}
+snippet '(data|dig|disc|def|exa|exs|exer)' "env" brA
+\begin{`!p snip.rv = longname(match.group(1))`} $1
+\end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
-# Match beginning of env with optional space right after
-# Usage: typing something like 'cor' at the beginning of a new line will automatically expand the snippet above. The idea is that, before typing anything new, you can hit tab again and it will create a label for the theorem environment, with the short name of the theorem prepended, so that the label will be accessible to autoref/cleveref
-snippet '\\begin{(answer|assumption|claim|computation|conjecture|corollary|counterexample|codeblock|data|digression|discussion|definition|example)}( |)' "label" br
-\\begin{`!p snip.rv = match.group(1)`}\\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+context "prose()"
+snippet '(fac|goal|intu|lem|meta|nota|note)' "env" brA
+\begin{`!p snip.rv = longname(match.group(1))`} $1
+\end{`!p snip.rv = longname(match.group(1))`}
+$0
 endsnippet
 
-snippet '\\begin{(examples|exercise|fact|intuition|lemma|metathm|notation|note|proposition|question|remark|terminology|theorem|upshot|warning)}( |)' "label" br
-\\begin{`!p snip.rv = match.group(1)`}\\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+context "prose()"
+snippet '(obs|prop|ques|rmk|term|thm|upsh)' "env" brA
+\begin{`!p snip.rv = longname(match.group(1))`} $1
+\end{`!p snip.rv = longname(match.group(1))`}
+$0
 endsnippet
 
+context "prose()"
+snippet '(warn)' "env" brA
+\begin{`!p snip.rv = longname(match.group(1))`} $1
+\end{`!p snip.rv = longname(match.group(1))`}
+$0
+endsnippet
+
+context "prose()"
+snippet '\begin{{(answer|assumption|claim|conjecture|corollary|counterexample|codeblock)}( |)' "env" brA
+\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
+
+context "prose()"
+snippet '\begin{{(data|digression|discussion|definition|example|examples|exercise)}( |)' "env" brA
+\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
+
+context "prose()"
+snippet '\begin{{(fact|goal|intuition|lemma|metathm|notation|note)}( |)' "env" brA
+\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
+
+context "prose()"
+snippet '\begin{{(observation|proposition|question|remark|terminology|theorem|upshot)}( |)' "env" brA
+\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
+
+context "prose()"
+snippet '\begin{{(warning)}( |)' "env" brA
+\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
 
 
 # vim:ft=snippets:
