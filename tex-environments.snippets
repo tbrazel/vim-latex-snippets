@@ -35,6 +35,7 @@ envs = {
 'intu':'intuition',
 'lem':'lemma',
 'meta':'metathm',
+'motiv':'motivation',
 'nota':'notation',
 'note':'note',
 'obs':'observation',
@@ -45,6 +46,7 @@ envs = {
 'thm':'theorem',
 'upsh':'upshot',
 'warn':'warning',
+'wish':'wishlist',
 }
 
 def longname(string):
@@ -88,14 +90,21 @@ $0
 endsnippet
 
 context "prose()"
-snippet '(meta|nota|note|obs|prop|ques)' "env" brA
+snippet '(meta|motiv|nota|note|obs|prop)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '(rmk|term|thm|upsh|warn)' "env" brA
+snippet '(ques|rmk|term|thm|upsh|warn)' "env" brA
+\begin{`!p snip.rv = longname(match.group(1))`} $1
+\end{`!p snip.rv = longname(match.group(1))`}
+$0
+endsnippet
+
+context "prose()"
+snippet '(wish)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
@@ -117,12 +126,17 @@ snippet '\\begin{(examples|exercise|fact|goal|intuition|lemma)}(\s*)' "env" br
 endsnippet
 
 context "prose()"
-snippet '\\begin{(metathm|notation|note|observation|proposition|question)}(\s*)' "env" br
+snippet '\\begin{(metathm|motivation|notation|note|observation|proposition)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 
 context "prose()"
-snippet '\\begin{(remark|terminology|theorem|upshot|warning)}(\s*)' "env" br
+snippet '\\begin{(question|remark|terminology|theorem|upshot|warning)}(\s*)' "env" br
+\\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
+endsnippet
+
+context "prose()"
+snippet '\\begin{(wishlist)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 
