@@ -16,9 +16,11 @@ def isMath():
 def prose():
 	return not isMath()
 envs = {
+'algo':'algorithm',
 'ans':'answer',
 'assump':'assumption',
 'cla':'claim',
+'comp':'computation',
 'conj':'conjecture',
 'cor':'corollary',
 'cex':'counterexample',
@@ -43,6 +45,7 @@ envs = {
 'ques':'question',
 'rmk':'remark',
 'set':'setup',
+'slo':'slogan',
 'term':'terminology',
 'thm':'theorem',
 'upsh':'upshot',
@@ -70,74 +73,74 @@ endglobal
 ###############
 
 context "prose()"
-snippet '(ans|assump|cla|conj|cor|cex)' "env" brA
+snippet '(algo|ans|assump|cla|comp|conj)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '(code|data|dig|disc|def|exa)' "env" brA
+snippet '(cor|cex|code|data|dig|disc)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '(exs|exer|fac|goal|intu|lem)' "env" brA
+snippet '(def|exa|exs|exer|fac|goal)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '(meta|motiv|nota|note|obs|prop)' "env" brA
+snippet '(intu|lem|meta|motiv|nota|note)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '(ques|rmk|set|term|thm|upsh)' "env" brA
+snippet '(obs|prop|ques|rmk|set|slo)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '(warn|wish)' "env" brA
+snippet '(term|thm|upsh|warn|wish)' "env" brA
 \begin{`!p snip.rv = longname(match.group(1))`} $1
 \end{`!p snip.rv = longname(match.group(1))`}
 $0
 endsnippet
 
 context "prose()"
-snippet '\\begin{(answer|assumption|claim|conjecture|corollary|counterexample)}(\s*)' "env" br
+snippet '\\begin{(algorithm|answer|assumption|claim|computation|conjecture)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 
 context "prose()"
-snippet '\\begin{(codeblock|data|digression|discussion|definition|example)}(\s*)' "env" br
+snippet '\\begin{(corollary|counterexample|codeblock|data|digression|discussion)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 
 context "prose()"
-snippet '\\begin{(examples|exercise|fact|goal|intuition|lemma)}(\s*)' "env" br
+snippet '\\begin{(definition|example|examples|exercise|fact|goal)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 
 context "prose()"
-snippet '\\begin{(metathm|motivation|notation|note|observation|proposition)}(\s*)' "env" br
+snippet '\\begin{(intuition|lemma|metathm|motivation|notation|note)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 
 context "prose()"
-snippet '\\begin{(question|remark|setup|terminology|theorem|upshot)}(\s*)' "env" br
+snippet '\\begin{(observation|proposition|question|remark|setup|slogan)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 
 context "prose()"
-snippet '\\begin{(warning|wishlist)}(\s*)' "env" br
+snippet '\\begin{(terminology|theorem|upshot|warning|wishlist)}(\s*)' "env" br
 \\begin{`!p snip.rv = match.group(1)`}\label{`!p snip.rv = shortname(match.group(1))`:$1} $0
 endsnippet
 

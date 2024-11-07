@@ -6,43 +6,6 @@
 #	Hotschke's vim stackexchange post for math-aware ultisnips https://vi.stackexchange.com/a/18494/
 priority 10
 global !p
-import re
-
-# Checks if a string is a backslash. Used in snippets where you want to expand after a backslash
-def isbackslash(string):
-    if string == '\\':
-	    return ''
-    return string
-
-# Functions for adding optional superscripts for sums, products, etc.
-def superscriptstart(t):
-	if t:
-		return '^{'
-	return ''
-def superscriptend(t):
-	if t:
-		return '}'
-	return ''
-
-# Function mapping Roman letter to Greek letter. Mappings obtained from the standard Greek alphabet keyboard
-
-greekDict = {'a': 'alpha', 'b': 'beta', 'c': 'xi', 'd': 'delta', 'e': 'epsilon', 'f': 'phi', 'g': 'gamma', 'h': 'eta', 'i': 'iota', 'k': 'kappa', 'l': 'lambda', 'm': 'mu', 'n': 'nu', 'o': 'omega', 'p':     'pi', 'q': 'theta', 'r': 'rho', 's': 'sigma', 't': 'tau', 'u': 'upsilon', 'v': 'omega', 'w': 'omega',     'x': 'chi', 'y': 'psi', 'z': 'zeta'}
-
-
-def greeklet(string):
-	lower = string.lower()
-	if lower in greekDict:
-		if string.isupper():
-			return greekDict[lower].capitalize()
-		else:
-			return greekDict[lower]
-	else:
-		return 'ERR'
-
-endglobal
-
-
-global !p
 def isMath():
     return int(vim.eval('vimtex#syntax#in_mathzone()')) > 0
 
